@@ -2,10 +2,12 @@
 #include <SDL2/SDL.h>
 #include <iostream>
 #include "Constant.hpp"
+#include <Entity.hpp>
 
 const std::string& title = "Jeu";
 SDL_Renderer* renderer;
 SDL_Window* window;
+Entity* player;
 bool quit = false;
  
 void init()
@@ -30,34 +32,7 @@ void init()
 
 void handleEvents()
 {
-    
-    SDL_Event event;
-    while(SDL_PollEvent(&event))
-    {
-         switch (event.type)
-         {
-            case SDL_QUIT:
-                quit = true;
-                
-                break;
-            case SDL_KEYDOWN:
-                switch (event.key.keysym.sym)
-                {
-                case SDLK_r:
-                    std::cout << "R key pressed" << std::endl;
-                    break;
-                case SDLK_SPACE:
-                    std::cout << "Space key pressed" << std::endl;
-                    break;
-                case SDLK_ESCAPE:
-                    quit = true;
-                    break;
-                default:
-                    break;
-                }
-                break;
-        }
-    }
+    player->handleEvents();
 }
 
 void render()
@@ -65,20 +40,51 @@ void render()
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0);
     SDL_RenderClear(renderer);
 
-    SDL_Rect rect = {50, 50, 40, 40};   
-    SDL_SetRenderDrawColor(renderer, 250, 20, 20, 0);
-    SDL_RenderFillRect(renderer, &rect);
-    SDL_RenderDrawRect(renderer, &rect);
+    player->render(renderer);
 
     SDL_RenderPresent(renderer);
 }
 
 int main(int argc, char **argv)
 {
+    Uint32 startTime, endTime;
+    float deltaTime;
+    player = new Entity(30, 100.0f, 20, 20);
     init();
     while (!quit) {
-        handleEvents();
+        startTime = SDL_GetTicks();
+        SDL_Event event;
+    while(SDL_PollEvent(&event))
+    {
+         switch (event.type)
+         {
+            case SDL_KEYDOWN:
+                switch (event.key.keysym.sym)
+                {
+                case SDLK_q:
+                    player->setX(player->getX()-player->getSpeed());
+                    break;
+                case SDLK_z:
+                    player->setY(player->getY()-player->getSpeed());
+                    break;
+                case SDLK_d:
+                    player->setX(player->getX()+player->getSpeed());
+                    break;
+                case SDLK_s:
+                    player->setY(player->getY()+player->getSpeed());
+                    break;
+                default:
+                    break;
+                }
+                break;
+        }
+    }
+    std::cout << player->getSpeed() << std::endl;
         render();
+        endTime = SDL_GetTicks();
+        deltaTime = (endTime - startTime) / 1000.0;
+        SDL_Delay(10);
+        player->setSpeed(player->getSpeed() * deltaTime);
     }
 
     return 0;

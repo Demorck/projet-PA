@@ -35,3 +35,4 @@
 debug.log
 include/SDL2
 /.vscode
+/.idea
