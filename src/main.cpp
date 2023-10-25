@@ -3,11 +3,13 @@
 #include <iostream>
 #include "Constant.hpp"
 #include <Entity.hpp>
+#include <Equipement.hpp>
 
 const std::string& title = "Jeu";
 SDL_Renderer* renderer;
 SDL_Window* window;
 Entity* player;
+Equipement* Equip;
 bool quit = false;
  
 void init()
@@ -41,6 +43,7 @@ void render()
     SDL_RenderClear(renderer);
 
     player->render(renderer);
+    Equip->render(renderer);
 
     SDL_RenderPresent(renderer);
 }
@@ -54,6 +57,9 @@ int main(int argc, char **argv)
     init();
     Uint32 currentTime, lastTime = SDL_GetTicks();
     double deltaTime;
+
+    Equip = new Equipement();
+
     while (!quit) {
         currentTime = SDL_GetTicks();
         deltaTime = (double)(currentTime - lastTime) / 1000.0;
