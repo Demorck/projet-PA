@@ -1,4 +1,4 @@
-<mxfile host="app.diagrams.net" modified="2023-10-25T08:16:26.964Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/116.0.0.0 Safari/537.36 OPR/102.0.0.0" etag="hzztjdhpGO6_wr9TD81g" version="22.0.7" type="github" pages="5">
+<mxfile host="app.diagrams.net" modified="2023-10-25T09:19:05.267Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/116.0.0.0 Safari/537.36 OPR/102.0.0.0" etag="Ezx7nEa3mh5j8MnBz1Xh" version="22.0.7" type="github" pages="5">
   <diagram name="Classes principales" id="wVLnpVCNf1317EJbrQJ7">
     <mxGraphModel dx="1009" dy="542" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
       <root>
@@ -24,7 +24,7 @@
           <mxGeometry x="10" y="130" width="120" height="60" as="geometry" />
         </mxCell>
         <mxCell id="L8BUyToJjAE1nBU0tFCu-13" value="Game" style="html=1;whiteSpace=wrap;" parent="1" vertex="1">
-          <mxGeometry x="180" y="130" width="120" height="60" as="geometry" />
+          <mxGeometry x="260" y="130" width="120" height="60" as="geometry" />
         </mxCell>
         <mxCell id="R_8-qDrX7hcIkXBAYprP-1" value="Equipments" style="html=1;whiteSpace=wrap;" parent="1" vertex="1">
           <mxGeometry x="480" y="130" width="120" height="60" as="geometry" />
@@ -169,7 +169,7 @@
     </mxGraphModel>
   </diagram>
   <diagram id="WWeAsBjscEdh2DhNJtwF" name="Class Equipments">
-    <mxGraphModel dx="696" dy="374" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+    <mxGraphModel dx="1009" dy="542" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
