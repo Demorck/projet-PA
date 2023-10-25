@@ -1,4 +1,5 @@
 #include <Entity.hpp>
+#include <iostream>
 
 Entity::Entity(int hp, float speed, int x, int y)
     : hp(hp), speed(speed), x(x), y(y)
@@ -21,32 +22,7 @@ void Entity::render(SDL_Renderer* renderer)
 
 void Entity::handleEvents()
 {
-    SDL_Event event;
-    while(SDL_PollEvent(&event))
-    {
-         switch (event.type)
-         {
-            case SDL_KEYDOWN:
-                switch (event.key.keysym.sym)
-                {
-                case SDLK_q:
-                    this->x = x-this->speed;
-                    break;
-                case SDLK_z:
-                    this->y = y-this->speed;
-                    break;
-                case SDLK_d:
-                    this->x = x+this->speed;
-                    break;
-                case SDLK_s:
-                    this->y = y+this->speed;
-                    break;
-                default:
-                    break;
-                }
-                break;
-        }
-    }
+
 }
 
 void Entity::setHP(int hp)
@@ -74,7 +50,7 @@ int Entity::getHP()
     return this->hp;
 }
 
-int Entity::getSpeed()
+float Entity::getSpeed()
 {
     return this->speed;
 }
