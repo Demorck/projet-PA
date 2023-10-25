@@ -14,7 +14,7 @@ Entity::~Entity()
 
 void Entity::render(SDL_Renderer* renderer)
 {
-    SDL_Rect rect = {x, y, 40, 40};   
+    SDL_Rect rect = {x, y, 60, 60};   
     SDL_SetRenderDrawColor(renderer, 250, 20, 20, 0);
     SDL_RenderFillRect(renderer, &rect);
     SDL_RenderDrawRect(renderer, &rect);
