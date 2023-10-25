@@ -8,10 +8,10 @@ class Entity
 {
     public:
         Entity(int hp, float speed, int x, int y);
+        // Entity();
         ~Entity();
-        void render(SDL_Renderer* renderer);
+        virtual void render(SDL_Renderer* renderer);
         void update(double time);
-        void handleEvents();
 
         int getHP();
         float getSpeed();
@@ -32,11 +32,6 @@ class Entity
         int hp;
         float speed;
         FACING_DIRECTION facing;
-
-        bool moveLeft;
-        bool moveRight; 
-        bool moveDown;
-        bool moveUp;
 };
 
 #endif

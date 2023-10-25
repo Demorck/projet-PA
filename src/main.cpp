@@ -2,13 +2,15 @@
 #include <SDL2/SDL.h>
 #include <iostream>
 #include "Constant.hpp"
-#include <Entity.hpp>
+#include <Player.hpp>
+#include <Enemy.hpp>
 #include <Equipement.hpp>
 
 const std::string& title = "Jeu";
 SDL_Renderer* renderer;
 SDL_Window* window;
-Entity* player;
+Player* player;
+Enemy* enemy;
 Equipement* Equip;
 bool quit = false;
  
@@ -44,17 +46,18 @@ void render()
 
     player->render(renderer);
     Equip->render(renderer);
+    enemy->render(renderer);
 
     SDL_RenderPresent(renderer);
 }
 
 int main(int argc, char **argv)
 {
-    
-    int LAST_UPDATE_TIME = SDL_GetTicks();
 
-    player = new Entity(30, 100.0f, 20, 20);
+    player = new Player(30, 100.0f, 20, 20);
+    enemy = new Enemy(20, 60.0f, 160, 160);
     init();
+
     Uint32 currentTime, lastTime = SDL_GetTicks();
     double deltaTime;
 
@@ -65,9 +68,12 @@ int main(int argc, char **argv)
         deltaTime = (double)(currentTime - lastTime) / 1000.0;
         lastTime = currentTime;
 
-        player->handleEvents();
+        handleEvents();
         player->update(deltaTime);
+        enemy->behavior(player);
+        enemy->update(deltaTime);
         render();
+
     }
 
     return 0;
