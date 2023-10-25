@@ -2,7 +2,7 @@
 #define ENTITY_HPP
 #include <SDL2/SDL.h>
 
-enum FACING_DIRECTION {UP, RIGHT, DON, LEFT}; 
+enum FACING_DIRECTION {UP, RIGHT, DOWN, LEFT, IDLE}; 
 
 class Entity
 {
@@ -10,7 +10,7 @@ class Entity
         Entity(int hp, float speed, int x, int y);
         ~Entity();
         void render(SDL_Renderer* renderer);
-        void update();
+        void update(double time);
         void handleEvents();
 
         int getHP();
@@ -19,19 +19,24 @@ class Entity
         void setHP(int hp);
         void setSpeed(float speed);
 
-        int getX();
-        int getY();
+        float getX();
+        float getY();
 
-        void setX(int x);
-        void setY(int y);
+        void setX(float x);
+        void setY(float y);
         void setFacing(FACING_DIRECTION facing);
     private:
-        int x;
-        int y;
+        float x;
+        float y;
         
         int hp;
         float speed;
         FACING_DIRECTION facing;
+
+        bool moveLeft;
+        bool moveRight; 
+        bool moveDown;
+        bool moveUp;
 };
 
 #endif

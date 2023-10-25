@@ -52,46 +52,16 @@ int main(int argc, char **argv)
 
     player = new Entity(30, 100.0f, 20, 20);
     init();
+    Uint32 currentTime, lastTime = SDL_GetTicks();
+    double deltaTime;
     while (!quit) {
-        // std::cout << deltaTime << std::endl;
-        
+        currentTime = SDL_GetTicks();
+        deltaTime = (double)(currentTime - lastTime) / 1000.0;
+        lastTime = currentTime;
 
-        const int CURRENT_TIME_MS = SDL_GetTicks();
-        int ELAPSED_TIME_MS = ( CURRENT_TIME_MS - LAST_UPDATE_TIME ) * 0.01f;
-        player->setSpeed(player->getSpeed() * std::min(ELAPSED_TIME_MS, 5 * 1000/50));
-        LAST_UPDATE_TIME = CURRENT_TIME_MS;
-        std::cout << player->getSpeed() << std::endl;
-
-        SDL_Event event;
-        while(SDL_PollEvent(&event))
-        {
-            switch (event.type)
-            {
-                case SDL_KEYDOWN:
-                    switch (event.key.keysym.sym)
-                    {
-                    case SDLK_q:
-                        
-                        player->setX(player->getX() * player->getSpeed() * ELAPSED_TIME_MS);
-                        break;
-                    case SDLK_z:
-                        player->setY(player->getY() * player->getSpeed() * ELAPSED_TIME_MS);
-                        break;
-                    case SDLK_d:
-                        player->setX(player->getX() * player->getSpeed() * ELAPSED_TIME_MS);
-                        break;
-                    case SDLK_s:
-                        player->setY(player->getY() * player->getSpeed() * ELAPSED_TIME_MS);
-                        break;
-                    default:
-                        break;
-                    }
-                    break;
-            }
-        }
-
+        player->handleEvents();
+        player->update(deltaTime);
         render();
-        player->update();
     }
 
     return 0;
