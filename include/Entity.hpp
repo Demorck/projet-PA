@@ -7,27 +7,36 @@ enum FACING_DIRECTION {UP, RIGHT, DOWN, LEFT, IDLE};
 class Entity
 {
     public:
-        Entity(int hp, float speed, int x, int y);
+        Entity(int hp, float speed, float x, float y, int width, int height);
         // Entity();
         ~Entity();
         virtual void render(SDL_Renderer* renderer);
         void update(double time);
+        bool collision(float x, float y, int width, int height);
+        bool collision(Entity* entity);
+        bool collision();
 
         int getHP();
         float getSpeed();
+        float getX();
+        float getY();
+        int getWidth();
+        int getHeight();
 
         void setHP(int hp);
         void setSpeed(float speed);
-
-        float getX();
-        float getY();
-
         void setX(float x);
         void setY(float y);
+        void setWidth(int width);
+        void setHeight(int height);
+        
+
         void setFacing(FACING_DIRECTION facing);
     private:
         float x;
         float y;
+        int width;
+        int height;
         
         int hp;
         float speed;

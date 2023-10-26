@@ -1,8 +1,8 @@
 #include <Enemy.hpp>
 
 
-Enemy::Enemy(int hp, float speed, int x, int y)
-    : Entity(hp, speed, x, y)
+Enemy::Enemy(int hp, float speed, float x, float y, int width, int height)
+    : Entity(hp, speed, x, y, width, height)
 {
     this->moveDown = false;
     this->moveUp = false;
@@ -17,7 +17,7 @@ Enemy::~Enemy()
 
 void Enemy::render(SDL_Renderer* renderer)
 {
-    SDL_Rect rect = {(int)this->getX(), (int)this->getY(), 60, 60};   
+    SDL_Rect rect = {(int)this->getX(), (int)this->getY(), this->getWidth(), this->getHeight()};   
     SDL_SetRenderDrawColor(renderer, 0, 0, 250, 0);
     SDL_RenderFillRect(renderer, &rect);
     SDL_RenderDrawRect(renderer, &rect);

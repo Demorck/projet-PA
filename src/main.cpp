@@ -54,8 +54,8 @@ void render()
 int main(int argc, char **argv)
 {
 
-    player = new Player(30, 100.0f, 20, 20);
-    enemy = new Enemy(20, 60.0f, 160, 160);
+    player = new Player(30, 100.0f, 20, 20, 60, 60);
+    enemy = new Enemy(20, 60.0f, 500, 500, 30, 30);
     init();
 
     Uint32 currentTime, lastTime = SDL_GetTicks();
@@ -70,6 +70,7 @@ int main(int argc, char **argv)
 
         handleEvents();
         player->update(deltaTime);
+        player->collision(enemy);
         enemy->behavior(player);
         enemy->update(deltaTime);
         render();

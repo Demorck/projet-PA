@@ -1,7 +1,7 @@
 #include <Player.hpp>
 
-Player::Player(int hp, float speed, int x, int y)
-    : Entity(hp, speed, x, y)
+Player::Player(int hp, float speed, float x, float y, int width, int height)
+    : Entity(hp, speed, x, y, width, height)
 {
     this->moveDown = false;
     this->moveUp = false;
@@ -11,7 +11,7 @@ Player::Player(int hp, float speed, int x, int y)
 
 void Player::render(SDL_Renderer* renderer)
 {
-    SDL_Rect rect = {(int)this->getX(), (int)this->getY(), 60, 60};   
+    SDL_Rect rect = {(int)this->getX(), (int)this->getY(), this->getWidth(), this->getHeight()};   
     SDL_SetRenderDrawColor(renderer, 250, 20, 20, 0);
     SDL_RenderFillRect(renderer, &rect);
     SDL_RenderDrawRect(renderer, &rect);

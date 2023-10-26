@@ -6,7 +6,7 @@
 class Enemy : public Entity
 {
     public:
-        Enemy(int hp, float speed, int x, int y);
+        Enemy(int hp, float speed, float x, float y, int width, int height);
         ~Enemy();
         void render(SDL_Renderer* renderer);
         void update(double time);
