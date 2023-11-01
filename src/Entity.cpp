@@ -6,11 +6,6 @@ Entity::Entity(int hp, float speed, float x, float y, int width, int height)
 {
 }
 
-// Entity::Entity()
-// {
-
-// }
-
 Entity::~Entity()
 {
 
@@ -32,11 +27,10 @@ bool Entity::collision(float x, float y, int width, int height)
         this->x <= x + width &&
         this->y + this->height >= y &&
         this->y <= y + height)
-
         {
-            
+            return true;
         }
-    
+    return false;    
 }
 
 bool Entity::collision(Entity* entity)
@@ -45,11 +39,10 @@ bool Entity::collision(Entity* entity)
         this->x <= entity->getX() + entity->getWidth() &&
         this->y + this->height >= entity->getY() &&
         this->y <= entity->getY() + entity->getHeight())
-
         {
-            
+            return true;
         }
-    
+    return false;
 }
 
 int Entity::getHP()
