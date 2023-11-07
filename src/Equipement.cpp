@@ -31,3 +31,12 @@ void Equipement::render(SDL_Renderer* renderer)
     SDL_RenderFillRect(renderer, &rect);
     SDL_RenderDrawRect(renderer, &rect);
 }
+int Equipement::getX()
+{
+    return this->cordx;
+}
+
+int Equipement::getY()
+{
+    return this->cordy;
+}

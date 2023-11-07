@@ -1,6 +1,7 @@
 #ifndef ENTITY_HPP
 #define ENTITY_HPP
 #include <SDL2/SDL.h>
+#include <Equipement.hpp>
 
 enum MovingDirection {UP, RIGHT, DOWN, LEFT, IDLE}; 
 
@@ -15,6 +16,7 @@ class Entity
         bool collision(float x, float y, int width, int height);
         bool collision(Entity* entity);
         bool collision();
+        bool collision(Equipement* equipement);
 
         int getHP();
         float getSpeed();

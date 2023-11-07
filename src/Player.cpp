@@ -31,6 +31,7 @@ void Player::update(double time)
     
     if (this->moveDown)
         this->setY(this->getY() + this->getSpeed() * time);
+    
 
 }
 
