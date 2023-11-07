@@ -11,7 +11,7 @@ INCLUDE_DIRECTORIES  := -Iinclude
 LIB_DIRECTORIES      := -Llib
 
 # -l"filename without lib prefix and .a extension" add libraries to use (libfile.a / libfile.dll)
-LIB_FILES            := -lSDL2main  -lSDL2 
+LIB_FILES            :=  -lSDL2_image -lSDL2main  -lSDL2
 
 program: $(O_FILES)
 	g++ $^ -o $@ $(LIB_DIRECTORIES) $(LIB_FILES) $(LINKED_FLAGS)

@@ -1,6 +1,9 @@
 #ifndef ENTITY_HPP
 #define ENTITY_HPP
 #include <SDL2/SDL.h>
+#include <Projectile.hpp>
+#include <Equipement.hpp>
+// #include <Helpers/Animation.hpp>
 
 enum MovingDirection {UP, RIGHT, DOWN, LEFT, IDLE}; 
 
@@ -14,6 +17,8 @@ class Entity
         void update(double time);
         bool collision(float x, float y, int width, int height);
         bool collision(Entity* entity);
+        bool collision(Projectile* projectile);
+        bool collision(Equipement* equipement);
         bool collision();
 
         int getHP();
@@ -22,6 +27,7 @@ class Entity
         float getY();
         int getWidth();
         int getHeight();
+        // Animation* getAnimation();
 
         void setHP(int hp);
         void setSpeed(float speed);
@@ -29,6 +35,8 @@ class Entity
         void setY(float y);
         void setWidth(int width);
         void setHeight(int height);
+
+        void play();
         
 
         void setFacing(MovingDirection facing);
@@ -41,6 +49,8 @@ class Entity
         int hp;
         float speed;
         MovingDirection facing;
+
+        // Animation* animation;
 };
 
 #endif

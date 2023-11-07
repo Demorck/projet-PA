@@ -6,6 +6,7 @@
 
 Game* game;
 
+
 Game::Game(const std::string& title)
     : title(title)
 {
@@ -18,6 +19,10 @@ Game::~Game()
 
 }
 
+/**
+ * * Initialise le jeu avec les différents modules SDL
+ * ? Les initialisations des joueurs et des ennemis seront enlevés quand on fera un menu et tout
+*/
 void Game::init()
 {
     if (SDL_Init(SDL_INIT_VIDEO) != 0) {
@@ -37,7 +42,15 @@ void Game::init()
         exit(1);
     }
 
-    this->player = new Player(20, 80.0f, 50, 50, 40, 40);
+    // int imgFlags = IMG_INIT_PNG;
+    // if( !( IMG_Init( imgFlags ) & imgFlags ) )
+    // {
+    //     std::cerr << "SDL_image could not initialize! SDL_image Error: " << IMG_GetError() << std::endl;
+    //     exit(1);
+    // }
+
+    this->player = new Player(20, 160.0f, 50, 50, 40, 40);
+    // player->getAnimation()->createTextureFromSurface("assets/sprites/player.png", renderer, window);
     for (int i = 0; i < 5; i++)
     {
         this->enemies.push_back(new Enemy(20, 40.0f, 500 + 50 * i, 500, 30, 30));
@@ -71,6 +84,10 @@ void Game::render()
     SDL_RenderPresent(this->renderer);
 }
 
+/**
+ * * La boucle d'events. 
+ * ! Tous les events à mettre ici
+*/
 void Game::handleEvents()
 {
     SDL_Event e;
@@ -192,7 +209,24 @@ void Game::update()
 
         for (int i = 0; i < projectiles.size(); i++)
         {
+            for (int j = 0; j < this->enemies.size(); j++)
+            {
+                if (this->enemies.at(j)->collision(projectiles.at(i)))
+                {
+                    this->enemies.erase(this->enemies.begin() + j);
+                    projectiles.erase(projectiles.begin() + i);
+                    
+                    this->enemies.push_back(new Enemy(20, 60.0f, 500, 500, 30, 30));
+
+                }
+            }
             projectiles.at(i)->update(deltaTime);
+        }
+
+        if (player->collision(equipement))
+        {
+            delete equipement;
+            player->setSpeed(player->getSpeed() * 2);
         }
         
         this->handleEvents();
