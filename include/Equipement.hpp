@@ -11,7 +11,6 @@ class Equipement
         Equipement(/* args */);
         ~Equipement();
         void   render(SDL_Renderer* renderer);
-
         int getX();
         int getY();
 };

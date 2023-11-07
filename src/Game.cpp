@@ -232,6 +232,10 @@ void Game::update()
         this->handleEvents();
         this->render();                                             
     }    
+    if(player->collision(equipement)){
+        delete equipement;
+        player->setSpeed(2.0);
+    }
 }
 
 int main(int argc, char **argv)
