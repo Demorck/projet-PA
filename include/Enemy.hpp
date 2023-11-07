@@ -2,6 +2,7 @@
 #define ENEMY_HPP
 #include <Entity.hpp>
 #include <Player.hpp>
+#include <math.h>
 
 class Enemy : public Entity
 {
@@ -11,6 +12,7 @@ class Enemy : public Entity
         void render(SDL_Renderer* renderer);
         void update(double time);
         void behavior(Player* player);
+        float distance(Player* player);
     private:
         bool moveLeft;
         bool moveRight; 

@@ -38,6 +38,11 @@ void Enemy::update(double time)
         this->setY(this->getY() + this->getSpeed() * time);
 }
 
+float Enemy::distance(Player* player)
+{
+    return sqrt(pow(player->getX() - this->getX(), 2) + pow(player->getY() - this->getY(), 2));
+}
+
 void Enemy::behavior(Player* player)
 {
     if (player->getX() < this->getX())

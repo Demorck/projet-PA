@@ -1,4 +1,5 @@
 #include <Player.hpp>
+#include <iostream>
 
 Player::Player(int hp, float speed, float x, float y, int width, int height)
     : Entity(hp, speed, x, y, width, height)
@@ -21,7 +22,7 @@ void Player::update(double time)
 {
     if (this->moveRight)
         this->setX(this->getX() + this->getSpeed() * time);
-    
+
     if (this->moveUp)
         this->setY(this->getY() - this->getSpeed() * time);
     
@@ -30,8 +31,30 @@ void Player::update(double time)
     
     if (this->moveDown)
         this->setY(this->getY() + this->getSpeed() * time);
+
 }
 
+void Player::move(MovingDirection move, bool isMoving)
+{
+    switch (move)
+    {
+        case LEFT:
+            this->moveLeft = isMoving;
+            break;
+        case RIGHT:
+            this->moveRight = isMoving;
+            break;
+        case UP:
+            this->moveUp = isMoving;
+            break;
+        case DOWN:
+            this->moveDown = isMoving;
+            break;
+        default:
+            break;
+    }
+
+}
 
 void Player::handleEvents()
 {
@@ -83,5 +106,28 @@ void Player::handleEvents()
                 }
                 break;
         }
+    }
+    
+}
+
+bool Player::isMoving(MovingDirection move)
+{
+    switch (move)
+    {
+        case LEFT:
+            return true;
+            break;
+        case RIGHT:
+            return true;
+            break;
+        case UP:
+            return true;
+            break;
+        case DOWN:
+            return true;
+            break;
+        default:
+            return false;
+            break;
     }
 }

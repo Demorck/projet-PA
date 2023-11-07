@@ -2,6 +2,7 @@
 #define PLAYER_HPP
 #include <Entity.hpp>
 
+
 class Player : public Entity
 {   
     public:
@@ -9,8 +10,11 @@ class Player : public Entity
         ~Player();
         void render(SDL_Renderer* renderer);
         void update(double time);
-        
+
+
         void handleEvents();
+        bool isMoving(MovingDirection move);
+        void move(MovingDirection move, bool isMoving);
     
     private:
         bool moveLeft;

@@ -105,7 +105,7 @@ void Entity::setHeight(int height)
     this->height = height;
 }
 
-void Entity::setFacing(FACING_DIRECTION facing)
+void Entity::setFacing(MovingDirection facing)
 {
     this->facing = facing; 
 }

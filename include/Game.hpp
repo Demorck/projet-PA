@@ -6,6 +6,7 @@
 #include <Player.hpp>
 #include <Enemy.hpp>
 #include <Equipement.hpp>
+#include <Projectile.hpp>
 
 class Game
 {
@@ -27,6 +28,7 @@ class Game
         std::vector<Enemy*> enemies;
         Enemy* enemy;
         Equipement* equipement;
+        std::vector<Projectile*> projectiles;
 
 };
 
