@@ -67,18 +67,6 @@ bool Entity::collision(Projectile* projectile)
     return false;
 }
 
-bool Entity::collision(Equipement* equipement)
-{
-    if (this->x + this->width >= equipement->getX() &&
-        this->x <= equipement->getX() + 30 &&
-        this->y + this->height >= equipement->getY() &&
-        this->y <= equipement->getY() + 30)
-        {
-            return true;
-        }
-    return false;
-}
-
 int Entity::getHP()
 {
     return this->hp;
