@@ -20,7 +20,6 @@ class Entity
         bool collision(Projectile* projectile);
         bool collision(Equipement* equipement);
         bool collision();
-        bool collision(Equipement* equipement);
 
         int getHP();
         float getSpeed();
