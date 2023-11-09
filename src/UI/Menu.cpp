@@ -9,7 +9,7 @@ Menu::Menu(SDL_Renderer* renderer, int width, int height)
     loadFont();
     loadButtons();
     std::string font = "assets/Roboto-Regular.ttf";
-    std::string titleText = "Sort Visualizer";
+    std::string titleText = "Le jeu de dingue";
 
     title = new Text(renderer, font, titleText, (width + 100) / 2, 30, 60, 20, {255, 255, 255, 255});
 }
@@ -20,30 +20,48 @@ Menu::~Menu()
     SDL_DestroyTexture(inputTexture);
 }
 
+/**
+ * 
+ * ! Penser à modifier exit pour que ce soit smooth
+*/
 void Menu::update(float deltaTime)
 {
     if (buttons[0]->pressed())
     {
         this->clearMenu();
     }
+
+    if (buttons[1]->pressed())
+    {
+        this->clearMenu();
+    }
+
+    if (buttons[2]->pressed())
+    {
+        exit(0);
+    }
 }
 
 void Menu::render()
 {
-    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0);
-    SDL_RenderClear(renderer);
-
     title->render();
-    for (int i = 0; i < 4; i++) {
+
+    for (int i = 0; i < sizeof(buttons) / sizeof(Button*); i++) {
         buttons[i]->render();
     }
+}
 
-    SDL_RenderPresent(renderer);
+void Menu::handleEvents(SDL_Event e)
+{
+    for (int i = 0; i < sizeof(buttons) / sizeof(Button*); i++)
+    {
+        buttons[i]->handleEvent(e);
+    }
 }
 
 void Menu::clearMenu()
 {
-    for (int i = 0; i < sizeof(buttons) / sizeof(Button); i++)
+    for (int i = 0; i < sizeof(buttons) / sizeof(Button*); i++)
     {
         delete buttons[i];
     }

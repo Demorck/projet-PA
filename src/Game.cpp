@@ -30,6 +30,11 @@ void Game::init()
         exit(1);
     }
 
+    if (TTF_Init() != 0) {
+        std::cerr << "TTF_Init error: " << TTF_GetError() << std::endl;
+        exit(1);
+    }
+
     this->window = SDL_CreateWindow(title.c_str(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
     if (this->window == nullptr) {
         std::cerr << "SDL_CreateWindow error: " << SDL_GetError() << std::endl;
@@ -98,7 +103,7 @@ void Game::handleEvents()
     SDL_Event e;
     while (SDL_PollEvent(&e))
     {
-        
+        mainMenu->handleEvents(e);
         switch (e.type)
         {
             case SDL_QUIT:

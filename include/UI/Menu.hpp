@@ -12,6 +12,7 @@ class Menu
 
         void update(float deltaTime);
         void render();
+        void handleEvents(SDL_Event e);
 
     private:
         void handleMouseClick(int x, int y);
@@ -21,7 +22,6 @@ class Menu
         void clearMenu();
         
         
-        SDL_Window* window;
         SDL_Renderer* renderer;
         TTF_Font* font;
         std::string fontPath;

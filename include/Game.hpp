@@ -1,6 +1,7 @@
 #ifndef GAME_HPP
 #define GAME_HPP
 #include <SDL2/SDL.h>
+#include <SDL2/SDL_ttf.h>
 #include <SDL2/SDL_image.h>
 #include <iostream>
 #include <vector>
@@ -12,6 +13,8 @@
 #include <Equipement.hpp>
 #include <Projectile.hpp>
 // #include <Helpers/Animation.hpp>
+
+enum STATE {MainMenu, Settings, Exit, Run};
 
 class Game
 {
