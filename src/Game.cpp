@@ -194,14 +194,15 @@ void Game::update()
         {
             projectiles.at(i)->update(deltaTime);
         }
-        
+         if(player->collision(equipement)){
+        delete equipement;
+        player->setSpeed(player->getSpeed()*2);
+        }
+
         this->handleEvents();
         this->render();                                             
     }    
-    if(player->collision(equipement)){
-        delete equipement;
-        player->setSpeed(2.0);
-    }
+   
 }
 
 int main(int argc, char **argv)
