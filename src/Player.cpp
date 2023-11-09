@@ -12,6 +12,7 @@ Player::Player(int hp, float speed, float x, float y, int width, int height)
 
 void Player::render(SDL_Renderer* renderer)
 {
+    // this->getAnimation()->animate(renderer);
     SDL_Rect rect = {(int)this->getX(), (int)this->getY(), this->getWidth(), this->getHeight()};   
     SDL_SetRenderDrawColor(renderer, 250, 20, 20, 0);
     SDL_RenderFillRect(renderer, &rect);

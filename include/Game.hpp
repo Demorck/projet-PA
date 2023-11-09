@@ -1,12 +1,14 @@
 #ifndef GAME_HPP
 #define GAME_HPP
 #include <SDL2/SDL.h>
+#include <SDL2/SDL_image.h>
 #include <iostream>
 #include <vector>
 #include <Player.hpp>
 #include <Enemy.hpp>
 #include <Equipement.hpp>
 #include <Projectile.hpp>
+// #include <Helpers/Animation.hpp>
 
 class Game
 {

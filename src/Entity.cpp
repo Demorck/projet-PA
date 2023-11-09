@@ -4,6 +4,7 @@
 Entity::Entity(int hp, float speed, float x, float y, int width, int height)
     : hp(hp), speed(speed), x(x), y(y), width(width), height(height)
 {
+    // this->animation = new Animation(x, y, width, height, 1, 1, "assets/sprites/player.png");
 }
 
 Entity::~Entity()
@@ -54,6 +55,18 @@ bool Entity::collision(Equipement* equipement){
     return false;
 }
 
+bool Entity::collision(Projectile* projectile)
+{
+    if (this->x + this->width >= projectile->getX() &&
+        this->x <= projectile->getX() + 20 &&
+        this->y + this->height >= projectile->getY() &&
+        this->y <= projectile->getY() + 20)
+        {
+            return true;
+        }
+    return false;
+}
+
 int Entity::getHP()
 {
     return this->hp;
@@ -83,6 +96,11 @@ int Entity::getHeight()
 {
     return this->height;
 }
+
+// Animation* Entity::getAnimation()
+// {
+//     return this->animation;
+// }
 
 void Entity::setHP(int hp)
 {
