@@ -1,4 +1,4 @@
-CPP_FILES       := $(wildcard src/*.cpp)
+CPP_FILES       := $(wildcard src/UI/*.cpp) $(wildcard src/*.cpp)
 RC_FILES        := $(wildcard res/*.rc)
 O_FILES         := $(subst .cpp,.o,$(CPP_FILES)) $(subst .rc,.o,$(RC_FILES))
 COMPILED_FLAGS  := -pedantic -W -Wall -O3 -g
@@ -11,7 +11,7 @@ INCLUDE_DIRECTORIES  := -Iinclude
 LIB_DIRECTORIES      := -Llib
 
 # -l"filename without lib prefix and .a extension" add libraries to use (libfile.a / libfile.dll)
-LIB_FILES            :=  -lSDL2_image -lSDL2main  -lSDL2
+LIB_FILES            := -lSDL2 -lSDL2main -lSDL2_ttf -lSDL2_image
 
 program: $(O_FILES)
 	g++ $^ -o $@ $(LIB_DIRECTORIES) $(LIB_FILES) $(LINKED_FLAGS)

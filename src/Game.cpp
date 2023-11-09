@@ -60,6 +60,8 @@ void Game::init()
     
     // this->enemies = new Enemy(20, 40.0f, 500, 500, 40, 40);
     this->equipement = new Equipement();
+
+    mainMenu = new Menu(renderer, SCREEN_WIDTH, SCREEN_HEIGHT);
 }
 
 void Game::render()
@@ -67,17 +69,20 @@ void Game::render()
     SDL_SetRenderDrawColor(this->renderer, 0, 0, 0, 0);
     SDL_RenderClear(this->renderer);
 
-    this->player->render(this->renderer);
-    this->equipement->render(this->renderer);
-    for (int i = 0; i < this->enemies.size(); i++)
-    {
-        this->enemies.at(i)->render(this->renderer);
-    }
+    // this->player->render(this->renderer);
+    // this->equipement->render(this->renderer);
+    // for (int i = 0; i < this->enemies.size(); i++)
+    // {
+    //     this->enemies.at(i)->render(this->renderer);
+    // }
 
-    for (int i = 0; i < projectiles.size(); i++)
-    {
-        projectiles.at(i)->render(this->renderer);
-    }
+    // for (Projectile* p : projectiles)
+    // {
+    //     p->render(renderer);
+    // }
+
+    mainMenu->render();
+    
     
     // this->enemies->render(this->renderer);
 
@@ -93,6 +98,7 @@ void Game::handleEvents()
     SDL_Event e;
     while (SDL_PollEvent(&e))
     {
+        
         switch (e.type)
         {
             case SDL_QUIT:
@@ -122,18 +128,18 @@ void Game::handleEvents()
                     {
                         float minDistance = 200000.f;
                         float currentDis = 0;
-                        int enemyIndex;
-                        for (int i = 0; i < this->enemies.size(); i++)
+                        Enemy* enemyIndex;
+                        for (Enemy* e : enemies)
                         {
-                            currentDis = this->enemies.at(i)->distance(player);
+                            currentDis = e->distance(player);
                             if (currentDis < minDistance)
                             {
                                 minDistance = currentDis;
-                                enemyIndex = i;
+                                enemyIndex = e;
                             }
                         }
-                        float angle = atan2(this->enemies.at(enemyIndex)->getY() - this->player->getY(), this->enemies.at(enemyIndex)->getX() - this->player->getX()); 
-                        this->projectiles.push_back(new Projectile(this->player->getX(), player->getY(), angle, 200.0f));
+                        float angle = atan2(enemyIndex->getY() - this->player->getY(), enemyIndex->getX() - this->player->getX()); 
+                        this->projectiles.push_back(std::move(new Projectile(this->player->getX(), player->getY(), angle, 200.0f)));
                         break;
                     }
                     default:
@@ -147,10 +153,7 @@ void Game::handleEvents()
                 {
                 case SDLK_z:
                     if (player->isMoving(UP))
-                    {
-                        std::cout << "a" << std::endl;
                         player->move(UP, false);
-                    }
                     break;
                 case SDLK_q:
                     if (player->isMoving(LEFT))
@@ -194,40 +197,44 @@ void Game::update()
 
         this->player->update(deltaTime);
         minDistance = 200000.0f;
-        for (int i = 0; i < this->enemies.size(); i++)
-        {
-            if (this->enemies.at(i)->collision(this->player))
-            {
-                this->enemies.erase(this->enemies.begin());
-                this->enemies.push_back(new Enemy(20, 60.0f, 500, 500, 30, 30));
+        // for (Enemy* enemy : enemies)
+        // {
+        //     if (enemy->collision(player))
+        //     {
+        //         enemies.erase(enemies.begin());
+        //         enemies.push_back(new Enemy(20, 60.0f, 500, 500, 30, 30));
 
-            }
-            this->enemies.at(i)->behavior(this->player);
-            this->enemies.at(i)->update(deltaTime);
-            distanceEnemy = this->enemies.at(i)->distance(player);
-        }
+        //     }
+        //     enemy->behavior(player);
+        //     enemy->update(deltaTime);
+        //     distanceEnemy = enemy->distance(player);
+        // }
 
-        for (int i = 0; i < projectiles.size(); i++)
-        {
-            for (int j = 0; j < this->enemies.size(); j++)
-            {
-                if (this->enemies.at(j)->collision(projectiles.at(i)))
-                {
-                    this->enemies.erase(this->enemies.begin() + j);
-                    projectiles.erase(projectiles.begin() + i);
+        // for (auto i = projectiles.begin(); i != projectiles.end(); i++)
+        // {
+        //     auto it1 = std::next(projectiles.begin(), 2);
+        //     for (auto j = enemies.begin(); j != enemies.end(); j++)
+        //     {
+        //         if ((*j)->collision((*it1)))
+        //         {
+        //             this->enemies.erase(j);
+        //             projectiles.erase(it1);
                     
-                    this->enemies.push_back(new Enemy(20, 60.0f, 500, 500, 30, 30));
+        //             // this->enemies.push_back(new Enemy(20, 60.0f, 500, 500, 30, 30));
 
-                }
-            }
-            projectiles.at(i)->update(deltaTime);
-        }
+        //         }
+        //     }
+        
+        //     (*it1)->update(deltaTime);
+        // }
 
-        if (player->collision(equipement))
-        {
-            delete equipement;
-            player->setSpeed(player->getSpeed() * 2);
-        }
+        // if (player->collision(equipement))
+        // {
+        //     delete equipement;
+        //     player->setSpeed(player->getSpeed() * 2);
+        // }
+
+        mainMenu->update(deltaTime);
         
         this->handleEvents();
         this->render();                                             
