@@ -1,14 +1,20 @@
 #ifndef GAME_HPP
 #define GAME_HPP
 #include <SDL2/SDL.h>
-// #include <SDL2/SDL_image.h>
+#include <SDL2/SDL_ttf.h>
+#include <SDL2/SDL_image.h>
 #include <iostream>
 #include <vector>
+#include <list>
+#include <algorithm>
+#include <UI/Menu.hpp>
 #include <Player.hpp>
 #include <Enemy.hpp>
 #include <Equipement.hpp>
 #include <Projectile.hpp>
 // #include <Helpers/Animation.hpp>
+
+enum STATE {MainMenu, Settings, Exit, Run};
 
 class Game
 {
@@ -30,7 +36,8 @@ class Game
         std::vector<Enemy*> enemies;
         Enemy* enemy;
         Equipement* equipement;
-        std::vector<Projectile*> projectiles;
+        std::list<Projectile*> projectiles;
+        Menu* mainMenu;
 
 };
 
