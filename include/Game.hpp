@@ -7,14 +7,13 @@
 #include <vector>
 #include <list>
 #include <algorithm>
-#include <UI/Menu.hpp>
 #include <Player.hpp>
 #include <Enemy.hpp>
 #include <Equipement.hpp>
 #include <Projectile.hpp>
 // #include <Helpers/Animation.hpp>
-
-enum STATE {MainMenu, Settings, Exit, Run};
+#include <Helpers/Enums.hpp>
+#include <UI/Menu.hpp>
 
 class Game
 {
@@ -38,6 +37,8 @@ class Game
         Equipement* equipement;
         std::list<Projectile*> projectiles;
         Menu* mainMenu;
+
+        State currentState;
 
 };
 

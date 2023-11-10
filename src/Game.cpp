@@ -12,6 +12,7 @@ Game::Game(const std::string& title)
 {
     this->isRuning = true;
     this->init();
+    currentState = MainMenu;
 }
 
 Game::~Game()
@@ -74,22 +75,28 @@ void Game::render()
     SDL_SetRenderDrawColor(this->renderer, 0, 0, 0, 0);
     SDL_RenderClear(this->renderer);
 
-    // this->player->render(this->renderer);
-    // this->equipement->render(this->renderer);
-    // for (int i = 0; i < this->enemies.size(); i++)
-    // {
-    //     this->enemies.at(i)->render(this->renderer);
-    // }
+    switch (currentState)
+    {
+    case MainMenu:
+        mainMenu->render();
+        break;
+    case Settings:
+        break;
+    case Run:
+        this->player->render(this->renderer);
+        this->equipement->render(this->renderer);
+        for (int i = 0; i < this->enemies.size(); i++)
+        {
+            this->enemies.at(i)->render(this->renderer);
+        }
 
-    // for (Projectile* p : projectiles)
-    // {
-    //     p->render(renderer);
-    // }
-
-    mainMenu->render();
-    
-    
-    // this->enemies->render(this->renderer);
+        for (Projectile* p : projectiles)
+        {
+            p->render(renderer);
+        }
+    default:
+        break;
+    }
 
     SDL_RenderPresent(this->renderer);
 }
@@ -147,6 +154,14 @@ void Game::handleEvents()
                         this->projectiles.push_back(std::move(new Projectile(this->player->getX(), player->getY(), angle, 200.0f)));
                         break;
                     }
+                    case SDLK_ESCAPE:
+                    {
+                        if (currentState == Run)
+                        {
+                            currentState = MainMenu;
+                        }
+                        break;
+                    }
                     default:
                         break;
                 }
@@ -202,44 +217,55 @@ void Game::update()
 
         this->player->update(deltaTime);
         minDistance = 200000.0f;
-        // for (Enemy* enemy : enemies)
-        // {
-        //     if (enemy->collision(player))
-        //     {
-        //         enemies.erase(enemies.begin());
-        //         enemies.push_back(new Enemy(20, 60.0f, 500, 500, 30, 30));
 
-        //     }
-        //     enemy->behavior(player);
-        //     enemy->update(deltaTime);
-        //     distanceEnemy = enemy->distance(player);
-        // }
+        switch (currentState)
+        {
+        case MainMenu:
+            mainMenu->update(deltaTime, currentState);
+            break;
 
-        // for (auto i = projectiles.begin(); i != projectiles.end(); i++)
-        // {
-        //     auto it1 = std::next(projectiles.begin(), 2);
-        //     for (auto j = enemies.begin(); j != enemies.end(); j++)
-        //     {
-        //         if ((*j)->collision((*it1)))
-        //         {
-        //             this->enemies.erase(j);
-        //             projectiles.erase(it1);
-                    
-        //             // this->enemies.push_back(new Enemy(20, 60.0f, 500, 500, 30, 30));
+        case Run:
+            for (Enemy* enemy : enemies)
+            {
+                if (enemy->collision(player))
+                {
+                    enemies.erase(enemies.begin());
+                    enemies.push_back(new Enemy(20, 60.0f, 500, 500, 30, 30));
 
-        //         }
-        //     }
+                }
+                enemy->behavior(player);
+                enemy->update(deltaTime);
+                distanceEnemy = enemy->distance(player);
+            }
+
+            for (auto i = projectiles.begin(); i != projectiles.end(); i++)
+            {
+                auto it1 = std::next(projectiles.begin(), 2);
+                for (auto j = enemies.begin(); j != enemies.end(); j++)
+                {
+                    if ((*j)->collision((*it1)))
+                    {
+                        this->enemies.erase(j);
+                        projectiles.erase(it1);
+                        
+                        // this->enemies.push_back(new Enemy(20, 60.0f, 500, 500, 30, 30));
+
+                    }
+                }
+            
+                (*it1)->update(deltaTime);
+            }
+
+            if (player->collision(equipement))
+            {
+                delete equipement;
+                player->setSpeed(player->getSpeed() * 2);
+            }
+            break;
         
-        //     (*it1)->update(deltaTime);
-        // }
-
-        // if (player->collision(equipement))
-        // {
-        //     delete equipement;
-        //     player->setSpeed(player->getSpeed() * 2);
-        // }
-
-        mainMenu->update(deltaTime);
+        default:
+            break;
+        }
         
         this->handleEvents();
         this->render();                                             

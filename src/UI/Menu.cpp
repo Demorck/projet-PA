@@ -24,16 +24,16 @@ Menu::~Menu()
  * 
  * ! Penser à modifier exit pour que ce soit smooth
 */
-void Menu::update(float deltaTime)
+void Menu::update(float deltaTime, State& state)
 {
     if (buttons[0]->pressed())
     {
-        this->clearMenu();
+        state = Run;
     }
 
     if (buttons[1]->pressed())
     {
-        this->clearMenu();
+        // this->clearMenu();
     }
 
     if (buttons[2]->pressed())

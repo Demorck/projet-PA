@@ -2,6 +2,8 @@
 #define MENU_HPP
 #include <UI/Button.hpp>
 #include <UI/Text.hpp>
+#include <Helpers/Enums.hpp>
+
 
 class Menu
 {
@@ -10,7 +12,7 @@ class Menu
         Menu();
         ~Menu();
 
-        void update(float deltaTime);
+        void update(float deltaTime, State& state);
         void render();
         void handleEvents(SDL_Event e);
 
