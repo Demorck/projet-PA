@@ -1,12 +1,37 @@
+#ifndef MAP_HPP
+#define MAP_HPP
 #include <stdlib.h>
 #include <stdio.h>
+#include <SDL2/SDL.h>
+#include <SDL2/SDL_image.h>
 
-char** allouer_tab_2D(int n, int m);
+class Map
+{
+    public:
+        Map(const char* textFileName, const char* tilemapFileName,  SDL_Window* window, SDL_Renderer* renderer);
+        ~Map();
 
-void desallouer_tab_2D(char** tab, int n);
+        void render(SDL_Renderer* renderer);
+        
+    private:
+        const int nbSpritesPerLine = 2;
+        const int nbSpritesPerColumn = 2;
+        const int nbSprites = nbSpritesPerLine * nbSpritesPerColumn;
 
-void afficher(char** tab);//a completer 
 
-void taille_fichier(const char* nomfichier, int*nbLig, int* nbCol);
+        void fileSize(FILE* file);
+        void readFile(const char* fileName);
+        void allocate2Dtab();
 
-char** lire_fichier(const char* nomfichier);
+        const char* textFileName;
+
+        int** tab;
+        SDL_Rect* tabRect;
+        SDL_Rect* rectOnScreen;
+
+        int nbLin;
+        int nbCol;
+        SDL_Texture* tilemap;
+};
+
+#endif

@@ -49,7 +49,8 @@ void Game::init()
     this->equipement = new Equipement();
 
     mainMenu = new Menu(render.getRenderer(), SCREEN_WIDTH, SCREEN_HEIGHT);
-    }
+    map = new Map("assets/map/map1.txt", "assets/sprites/tilemap.png", render.getWindow(), render.getRenderer());
+}
 
 void Game::renderGame()
 {
@@ -62,6 +63,7 @@ void Game::renderGame()
         mainMenu->render();
         break;
     case Settings:
+        map->render(render.getRenderer());
         break;
     case Run:
         this->player->render(render.getRenderer());
