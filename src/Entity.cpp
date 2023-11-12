@@ -9,7 +9,7 @@ Entity::Entity(int hp, float speed, float x, float y, int width, int height)
 
 Entity::~Entity()
 {
-
+    
 }
 
 void Entity::render(SDL_Renderer* renderer)
@@ -97,10 +97,10 @@ int Entity::getHeight()
     return this->height;
 }
 
-// Animation* Entity::getAnimation()
-// {
-//     return this->animation;
-// }
+Animation* Entity::getAnimation()
+{
+    return this->animation;
+}
 
 void Entity::setHP(int hp)
 {

@@ -14,6 +14,8 @@
 // #include <Helpers/Animation.hpp>
 #include <Helpers/Enums.hpp>
 #include <UI/Menu.hpp>
+#include <UI/Render.hpp>
+#include <Map.hpp>
 
 class Game
 {
@@ -21,13 +23,12 @@ class Game
         Game(const std::string& title);
         void handleEvents();
         void init();
-        void render();
+        void renderGame();
         void update();
         ~Game();
 
     private:
-        SDL_Renderer* renderer;
-        SDL_Window* window;
+        Render& render = Render::getInstance();
         bool isRuning;
         const std::string& title;
         
@@ -35,8 +36,9 @@ class Game
         std::vector<Enemy*> enemies;
         Enemy* enemy;
         Equipement* equipement;
-        std::list<Projectile*> projectiles;
+        std::vector<Projectile*> projectiles;
         Menu* mainMenu;
+        Map* map;
 
         State currentState;
 

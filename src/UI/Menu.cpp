@@ -33,7 +33,7 @@ void Menu::update(float deltaTime, State& state)
 
     if (buttons[1]->pressed())
     {
-        // this->clearMenu();
+        state = Settings;
     }
 
     if (buttons[2]->pressed())

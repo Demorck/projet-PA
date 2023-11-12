@@ -1,4 +1,5 @@
 #include <Enemy.hpp>
+#include <iostream>
 
 
 Enemy::Enemy(int hp, float speed, float x, float y, int width, int height)
@@ -13,6 +14,7 @@ Enemy::Enemy(int hp, float speed, float x, float y, int width, int height)
 
 Enemy::~Enemy()
 {
+    
 }
 
 void Enemy::render(SDL_Renderer* renderer)

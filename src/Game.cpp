@@ -36,26 +36,7 @@ void Game::init()
         exit(1);
     }
 
-    this->window = SDL_CreateWindow(title.c_str(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
-    if (this->window == nullptr) {
-        std::cerr << "SDL_CreateWindow error: " << SDL_GetError() << std::endl;
-        exit(1);
-    }
-
-    this->renderer = SDL_CreateRenderer(this->window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
-    if (this->renderer == nullptr) {
-        std::cerr << "SDL_CreateRenderer error: " << SDL_GetError() << std::endl;
-        exit(1);
-    }
-
-    // int imgFlags = IMG_INIT_PNG;
-    // if( !( IMG_Init( imgFlags ) & imgFlags ) )
-    // {
-    //     std::cerr << "SDL_image could not initialize! SDL_image Error: " << IMG_GetError() << std::endl;
-    //     exit(1);
-    // }
-
-    this->player = new Player(20, 160.0f, 50, 50, 40, 40);
+    this->player = new Player(20, 160.0f, 50, 50, 64, 64);
     // player->getAnimation()->createTextureFromSurface("assets/sprites/player.png", renderer, window);
     for (int i = 0; i < 5; i++)
     {
@@ -67,13 +48,13 @@ void Game::init()
     // this->enemies = new Enemy(20, 40.0f, 500, 500, 40, 40);
     this->equipement = new Equipement();
 
-    mainMenu = new Menu(renderer, SCREEN_WIDTH, SCREEN_HEIGHT);
-}
+    mainMenu = new Menu(render.getRenderer(), SCREEN_WIDTH, SCREEN_HEIGHT);
+    }
 
-void Game::render()
+void Game::renderGame()
 {
-    SDL_SetRenderDrawColor(this->renderer, 0, 0, 0, 0);
-    SDL_RenderClear(this->renderer);
+    SDL_SetRenderDrawColor(render.getRenderer(), 0, 0, 0, 0);
+    SDL_RenderClear(render.getRenderer());
 
     switch (currentState)
     {
@@ -83,22 +64,22 @@ void Game::render()
     case Settings:
         break;
     case Run:
-        this->player->render(this->renderer);
-        this->equipement->render(this->renderer);
+        this->player->render(render.getRenderer());
+        this->equipement->render(render.getRenderer());
         for (int i = 0; i < this->enemies.size(); i++)
         {
-            this->enemies.at(i)->render(this->renderer);
+            this->enemies.at(i)->render(render.getRenderer());
         }
 
         for (Projectile* p : projectiles)
         {
-            p->render(renderer);
+            p->render(render.getRenderer());
         }
     default:
         break;
     }
 
-    SDL_RenderPresent(this->renderer);
+    SDL_RenderPresent(render.getRenderer());
 }
 
 /**
@@ -138,25 +119,28 @@ void Game::handleEvents()
                         break;
                     case SDLK_p:
                     {
-                        float minDistance = 200000.f;
-                        float currentDis = 0;
-                        Enemy* enemyIndex;
-                        for (Enemy* e : enemies)
+                        if (enemies.size() > 0)
                         {
-                            currentDis = e->distance(player);
-                            if (currentDis < minDistance)
+                            float minDistance = 200000.f;
+                            float currentDis = 0;
+                            Enemy* enemyIndex;
+                            for (Enemy* e : enemies)
                             {
-                                minDistance = currentDis;
-                                enemyIndex = e;
+                                currentDis = e->distance(player);
+                                if (currentDis < minDistance)
+                                {
+                                    minDistance = currentDis;
+                                    enemyIndex = e;
+                                }
                             }
+                            float angle = atan2(enemyIndex->getY() - this->player->getY(), enemyIndex->getX() - this->player->getX()); 
+                            this->projectiles.push_back(new Projectile(player->getX() + player->getWidth() / 2, player->getY() + player->getHeight() / 2, angle, 200.0f));
                         }
-                        float angle = atan2(enemyIndex->getY() - this->player->getY(), enemyIndex->getX() - this->player->getX()); 
-                        this->projectiles.push_back(std::move(new Projectile(this->player->getX(), player->getY(), angle, 200.0f)));
                         break;
                     }
                     case SDLK_ESCAPE:
                     {
-                        if (currentState == Run)
+                        if (currentState == Run or currentState == Settings)
                         {
                             currentState = MainMenu;
                         }
@@ -225,6 +209,10 @@ void Game::update()
             break;
 
         case Run:
+        {
+            /**
+             * ! A modifier pour que ça fasse des dégâts au joueur
+            */
             for (Enemy* enemy : enemies)
             {
                 if (enemy->collision(player))
@@ -238,22 +226,40 @@ void Game::update()
                 distanceEnemy = enemy->distance(player);
             }
 
-            for (auto i = projectiles.begin(); i != projectiles.end(); i++)
+            /**
+             * Si un projectile touche un ennemi.
+             * ! Pour le moment, ça enlève l'ennemi. A terme, ça doit enlever de la vie.
+            */
+            for (auto i = projectiles.begin(); i != projectiles.end();)
             {
-                auto it1 = std::next(projectiles.begin(), 2);
-                for (auto j = enemies.begin(); j != enemies.end(); j++)
-                {
-                    if ((*j)->collision((*it1)))
-                    {
-                        this->enemies.erase(j);
-                        projectiles.erase(it1);
-                        
-                        // this->enemies.push_back(new Enemy(20, 60.0f, 500, 500, 30, 30));
+                (*i)->update(deltaTime);
 
+                bool projectileRemoved = false;
+
+                for (auto j = enemies.begin(); j != enemies.end();)
+                {
+                    if ((*j)->collision(*i))
+                    {
+                        delete *j;
+                        j = enemies.erase(j);
+
+                        delete *i;
+                        i = projectiles.erase(i);
+
+                        projectileRemoved = true;
+                        break;  
+                    }
+                    else
+                    {
+                        ++j;
                     }
                 }
-            
-                (*it1)->update(deltaTime);
+
+                // Si un projectile n'est pas enlevé, incrémente l'itérateur car erase renvoie le prochain dans std::vector
+                if (!projectileRemoved)
+                {
+                    ++i;
+                }
             }
 
             if (player->collision(equipement))
@@ -262,13 +268,16 @@ void Game::update()
                 player->setSpeed(player->getSpeed() * 2);
             }
             break;
+        }
         
+        case Settings:
+            break;
         default:
             break;
         }
         
         this->handleEvents();
-        this->render();                                             
+        this->renderGame();                                             
     }    
    
 }
