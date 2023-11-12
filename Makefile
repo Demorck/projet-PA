@@ -1,4 +1,4 @@
-CPP_FILES       := $(wildcard src/UI/*.cpp) $(wildcard src/*.cpp)
+CPP_FILES       := $(wildcard src/UI/*.cpp) $(wildcard src/*.cpp) $(wildcard src/Helpers/*.cpp)
 RC_FILES        := $(wildcard res/*.rc)
 O_FILES         := $(subst .cpp,.o,$(CPP_FILES)) $(subst .rc,.o,$(RC_FILES))
 COMPILED_FLAGS  := -pedantic -W -Wall -O3 -g
