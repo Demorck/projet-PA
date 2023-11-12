@@ -8,15 +8,17 @@ Player::Player(int hp, float speed, float x, float y, int width, int height)
     this->moveUp = false;
     this->moveLeft = false;
     this->moveRight = false;
+    Render& r = Render::getInstance();
+    animation = new Animation(x, y, width, height, 4, 1.f, "assets/sprites/player.png", r.getRenderer(), r.getWindow());
 }
 
 void Player::render(SDL_Renderer* renderer)
 {
-    // this->getAnimation()->animate(renderer);
-    SDL_Rect rect = {(int)this->getX(), (int)this->getY(), this->getWidth(), this->getHeight()};   
-    SDL_SetRenderDrawColor(renderer, 250, 20, 20, 0);
-    SDL_RenderFillRect(renderer, &rect);
-    SDL_RenderDrawRect(renderer, &rect);
+    SDL_Rect rect = {(int)this->getX(), (int)this->getY(), this->getWidth(), this->getHeight()};
+    this->animation->animate(renderer, rect);   
+    // SDL_SetRenderDrawColor(renderer, 250, 20, 20, 0);
+    // SDL_RenderFillRect(renderer, &rect);
+    // SDL_RenderDrawRect(renderer, &rect);
 }
 
 void Player::update(double time)
@@ -33,7 +35,7 @@ void Player::update(double time)
     if (this->moveDown)
         this->setY(this->getY() + this->getSpeed() * time);
     
-
+    this->animation->update(time);
 }
 
 void Player::move(MovingDirection move, bool isMoving)

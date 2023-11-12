@@ -3,7 +3,7 @@
 #include <SDL2/SDL.h>
 #include <Projectile.hpp>
 #include <Equipement.hpp>
-// #include <Helpers/Animation.hpp>
+#include <Helpers/Animation.hpp>
 
 enum MovingDirection {UP, RIGHT, DOWN, LEFT, IDLE}; 
 
@@ -19,7 +19,6 @@ class Entity
         bool collision(Entity* entity);
         bool collision(Projectile* projectile);
         bool collision(Equipement* equipement);
-        bool collision();
 
         int getHP();
         float getSpeed();
@@ -27,17 +26,14 @@ class Entity
         float getY();
         int getWidth();
         int getHeight();
-        // Animation* getAnimation();
+        virtual Animation* getAnimation();
 
         void setHP(int hp);
         void setSpeed(float speed);
         void setX(float x);
         void setY(float y);
         void setWidth(int width);
-        void setHeight(int height);
-
-        void play();
-        
+        void setHeight(int height);       
 
         void setFacing(MovingDirection facing);
     private:
@@ -50,7 +46,7 @@ class Entity
         float speed;
         MovingDirection facing;
 
-        // Animation* animation;
+        Animation* animation;
 };
 
 #endif

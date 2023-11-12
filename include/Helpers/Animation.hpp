@@ -7,11 +7,11 @@
 class Animation
 {
     public:
-        Animation(float x, float y, int width, int height, int nbFrame, int delay, const char* filepath, SDL_Renderer* renderer, SDL_Window* window);
-        Animation(float x, float y, int width, int height, int nbFrame, int delay, const char* filepath);
+        Animation(float x, float y, int width, int height, int nbFrame, float delay, const char* filepath, SDL_Renderer* renderer, SDL_Window* window);
         ~Animation();
 
-        void animate(SDL_Renderer* renderer);
+        void animate(SDL_Renderer* renderer, SDL_Rect where);
+        void update(float deltaTime);
         void createTextureFromSurface(const char* filepath, SDL_Renderer* renderer, SDL_Window* window);
         
     private:
@@ -21,10 +21,13 @@ class Animation
         int height;
         
         int nbFrame;
-        int delay;
-        SDL_Texture* tabImage[5]; 
+        float delay;
+        float elapsedTime;
+        SDL_Rect* tabImage; 
+        int currentFrame;
+        SDL_Texture* spriteSheet;
 
-        SDL_Window* window;
+        void createRectangles();
 
 };
 

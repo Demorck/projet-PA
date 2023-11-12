@@ -1,6 +1,8 @@
-# ifndef PLAYER_HPP
+#ifndef PLAYER_HPP
 #define PLAYER_HPP
 #include <Entity.hpp>
+#include <Helpers/Animation.hpp>
+#include <UI/Render.hpp>
 
 
 class Player : public Entity
@@ -21,6 +23,8 @@ class Player : public Entity
         bool moveRight; 
         bool moveDown;
         bool moveUp;
+
+        Animation* animation; 
 };
 
 #endif

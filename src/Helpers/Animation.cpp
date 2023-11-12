@@ -1,27 +1,41 @@
 #include <Helpers/Animation.hpp>
 
-Animation::Animation(float x, float y, int width, int height, int nbFrame, int delay, const char* filepath, SDL_Renderer* renderer, SDL_Window* window)
+Animation::Animation(float x, float y, int width, int height, int nbFrame, float delay, const char* filepath, SDL_Renderer* renderer, SDL_Window* window)
     : x(x), y(y), width(width), height(height), nbFrame(nbFrame), delay(delay)
 {
     this->createTextureFromSurface(filepath, renderer, window);
-    tabImage[nbFrame] = (SDL_Texture*) malloc(nbFrame * sizeof(SDL_Texture*));
-}
+    currentFrame = 0;
+    tabImage = (SDL_Rect*)malloc(nbFrame * sizeof(SDL_Rect));
+    this->createRectangles();
 
-Animation::Animation(float x, float y, int width, int height, int nbFrame, int delay, const char* filepath)
-    : x(x), y(y), width(width), height(height), nbFrame(nbFrame), delay(delay)
-{
-    tabImage[nbFrame] = (SDL_Texture*) malloc(nbFrame * sizeof(SDL_Texture*));
 }
 
 Animation::~Animation()
 {
-
+    free(tabImage);
+    SDL_DestroyTexture(spriteSheet);
 }
 
-void Animation::animate(SDL_Renderer* renderer)
+void Animation::animate(SDL_Renderer* renderer, SDL_Rect where)
 {
-    SDL_RenderCopy(renderer, tabImage[0], NULL, NULL);
-    SDL_RenderPresent(renderer);
+    SDL_RenderCopy(renderer, spriteSheet, &tabImage[currentFrame], &where);
+    // SDL_RenderPresent(renderer);
+}
+
+void Animation::update(float deltaTime)
+{
+    elapsedTime += deltaTime;
+    
+    if (elapsedTime >= delay)
+    {
+        currentFrame++;
+        if (currentFrame == nbFrame)
+        {
+            currentFrame = 0;
+        }
+
+        elapsedTime = 0.0f;
+    }
 }
 
 void Animation::createTextureFromSurface(const char* filepath, SDL_Renderer* renderer, SDL_Window* window)
@@ -45,5 +59,26 @@ void Animation::createTextureFromSurface(const char* filepath, SDL_Renderer* ren
         SDL_FreeSurface( loadedSurface );
     }
 
-    tabImage[0] = SDL_CreateTextureFromSurface(renderer, optimizedSurface);
+    spriteSheet = SDL_CreateTextureFromSurface(renderer, optimizedSurface);
+}
+
+void Animation::createRectangles()
+{
+    SDL_Point size;
+    SDL_QueryTexture(spriteSheet, NULL, NULL, &size.x, &size.y);
+
+    for(int i = 0; i < nbFrame; i++){
+        tabImage[i] = {0, 0, 0, 0};
+    }
+
+    for (int i = 0; i < nbFrame; i++)
+    {
+        SDL_Rect currentRect;
+        currentRect.x = i*64;
+        currentRect.y = 0;
+        currentRect.w = 64;
+        currentRect.h = 64;
+
+        tabImage[i] = currentRect;
+    }
 }

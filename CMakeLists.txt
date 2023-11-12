@@ -12,7 +12,7 @@ set(CMAKE_CXX_FLAGS "-pedantic -O3 -g")
 set(CMAKE_EXE_LINKER_FLAGS)
 
 # Déclaration des fichiers source
-file(GLOB CPP_FILES src/UI/*.cpp src/*.cpp)
+file(GLOB CPP_FILES src/UI/*.cpp src/*.cpp src/Helpers/*.cpp)
 file(GLOB RC_FILES src/*.rc)
 
 # Inclure les en-têtes
