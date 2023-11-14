@@ -9,7 +9,7 @@ Player::Player(int hp, float speed, float x, float y, int width, int height)
     this->moveLeft = false;
     this->moveRight = false;
     Render& r = Render::getInstance();
-    animation = new Animation(x, y, width, height, 4, 1.f, "assets/sprites/player.png", r.getRenderer(), r.getWindow());
+    animation = new Animation(x, y, width, height, 4, 1.f, "assets/sprites/player2.png", r.getRenderer(), r.getWindow());
 }
 
 void Player::render(SDL_Renderer* renderer)
@@ -34,6 +34,19 @@ void Player::update(double time)
     
     if (this->moveDown)
         this->setY(this->getY() + this->getSpeed() * time);
+
+    if (this->getX() + this->getWidth() > SCREEN_WIDTH)
+        this->setX(this->getX() - this->getSpeed() * time);
+
+    if (this->getY() + this->getHeight() > SCREEN_HEIGHT)
+        this->setY(this->getY() - this->getSpeed() * time);
+
+    if (this->getX() < 0)
+        this->setX(this->getX() + this->getSpeed() * time);
+
+    if (this->getY() < 0)
+        this->setY(this->getY() + this->getSpeed() * time);
+    
     
     this->animation->update(time);
 }

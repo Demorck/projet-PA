@@ -8,11 +8,11 @@ Equipement::Equipement(/* args */)
 {
    
     int minw = 1; 
-    int maxw = 1070;
+    int maxw = SCREEN_WIDTH;
     this->cordx = std::rand() % maxw;
 
     int minh = 1; 
-    int maxh = 710;
+    int maxh = SCREEN_HEIGHT;
     
     this->cordy = std::rand() % maxh;
 }

@@ -11,7 +11,7 @@ Menu::Menu(SDL_Renderer* renderer, int width, int height)
     std::string font = "assets/Roboto-Regular.ttf";
     std::string titleText = "Le jeu de dingue";
 
-    title = new Text(renderer, font, titleText, (width + 100) / 2, 30, 60, 20, {255, 255, 255, 255});
+    title = new Text(renderer, font, titleText, (width + 100) / 3, 30, 60, 20, {255, 255, 255, 255});
 }
 
 Menu::~Menu()

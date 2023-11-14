@@ -18,6 +18,7 @@ Animation::~Animation()
 
 void Animation::animate(SDL_Renderer* renderer, SDL_Rect where)
 {
+    if (SDL_SetTextureBlendMode(spriteSheet, SDL_BLENDMODE_NONE) == -1) printf("feur");
     SDL_RenderCopy(renderer, spriteSheet, &tabImage[currentFrame], &where);
     // SDL_RenderPresent(renderer);
 }
@@ -50,7 +51,8 @@ void Animation::createTextureFromSurface(const char* filepath, SDL_Renderer* ren
     {
         //Convert surface to screen format
         optimizedSurface = SDL_ConvertSurface( loadedSurface, SDL_GetWindowSurface(window)->format, 0 );
-        if( optimizedSurface == NULL )
+        
+        if( optimizedSurface == NULL)
         {
             printf( "Unable to optimize image %s! SDL Error: %s\n", filepath, SDL_GetError() );
         }
@@ -74,10 +76,10 @@ void Animation::createRectangles()
     for (int i = 0; i < nbFrame; i++)
     {
         SDL_Rect currentRect;
-        currentRect.x = i*64;
+        currentRect.x = i*width;
         currentRect.y = 0;
-        currentRect.w = 64;
-        currentRect.h = 64;
+        currentRect.w = width;
+        currentRect.h = height;
 
         tabImage[i] = currentRect;
     }

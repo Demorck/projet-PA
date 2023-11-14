@@ -1,6 +1,7 @@
 #ifndef ENEMY_HPP
 #define ENEMY_HPP
 #include <Entity.hpp>
+#include <Helpers/Animation.hpp>
 #include <Player.hpp>
 #include <math.h>
 
@@ -18,7 +19,8 @@ class Enemy : public Entity
         bool moveRight; 
         bool moveDown;
         bool moveUp;
-
+        
+        Animation* animation; 
 };
 
 #endif

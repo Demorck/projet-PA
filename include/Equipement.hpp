@@ -1,6 +1,7 @@
 #ifndef EQUIPEMENT_HPP
 #define EQUIPEMENT_HPP
 #include <SDL2/SDL.h>
+#include <Constant.hpp>
 
 class Equipement
 {

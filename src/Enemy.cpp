@@ -9,7 +9,8 @@ Enemy::Enemy(int hp, float speed, float x, float y, int width, int height)
     this->moveUp = false;
     this->moveLeft = false;
     this->moveRight = false;
-
+    Render& r = Render::getInstance();
+    animation = new Animation(x, y, 640, 640, 1, 1.f, "assets/sprites/max.jpg", r.getRenderer(), r.getWindow());
 }
 
 Enemy::~Enemy()
@@ -19,10 +20,8 @@ Enemy::~Enemy()
 
 void Enemy::render(SDL_Renderer* renderer)
 {
-    SDL_Rect rect = {(int)this->getX(), (int)this->getY(), this->getWidth(), this->getHeight()};   
-    SDL_SetRenderDrawColor(renderer, 0, 0, 250, 0);
-    SDL_RenderFillRect(renderer, &rect);
-    SDL_RenderDrawRect(renderer, &rect);
+    SDL_Rect rect = {(int)this->getX(), (int)this->getY(), this->getWidth(), this->getHeight()};
+    this->animation->animate(renderer, rect);
 }
 
 void Enemy::update(double time)
@@ -38,6 +37,8 @@ void Enemy::update(double time)
     
     if (this->moveDown)
         this->setY(this->getY() + this->getSpeed() * time);
+
+    this->animation->update(time);
 }
 
 float Enemy::distance(Player* player)

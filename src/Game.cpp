@@ -40,7 +40,7 @@ void Game::init()
     // player->getAnimation()->createTextureFromSurface("assets/sprites/player.png", renderer, window);
     for (int i = 0; i < 5; i++)
     {
-        this->enemies.push_back(new Enemy(20, 40.0f, 500 + 50 * i, 500, 30, 30));
+        this->enemies.push_back(new Enemy(20, 40.0f, SCREEN_WIDTH / 3 + 50 * i, SCREEN_HEIGHT / 2, 30, 30));
     }
 
     int SDL_EnableKeyRepeat(0);
@@ -63,9 +63,10 @@ void Game::renderGame()
         mainMenu->render();
         break;
     case Settings:
-        map->render(render.getRenderer());
+        // map->render(render.getRenderer());
         break;
     case Run:
+        map->render(render.getRenderer());
         this->player->render(render.getRenderer());
         this->equipement->render(render.getRenderer());
         for (int i = 0; i < this->enemies.size(); i++)
@@ -118,6 +119,10 @@ void Game::handleEvents()
                     case SDLK_d:
                         player->move(RIGHT, true);
                         player->move(LEFT, false);
+                        break;
+                    case SDLK_e:
+                        this->player->setSpeed(160.f);
+                        this->equipement = new Equipement();
                         break;
                     case SDLK_p:
                     {

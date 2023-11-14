@@ -3,6 +3,7 @@
 #include <Entity.hpp>
 #include <Helpers/Animation.hpp>
 #include <UI/Render.hpp>
+#include <Constant.hpp>
 
 
 class Player : public Entity
