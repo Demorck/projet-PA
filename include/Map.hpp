@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
+#include <Constant.hpp>
 
 class Map
 {
@@ -14,9 +15,9 @@ class Map
         void render(SDL_Renderer* renderer);
         
     private:
-        const int nbSpritesPerLine = 2;
-        const int nbSpritesPerColumn = 2;
-        const int nbSprites = nbSpritesPerLine * nbSpritesPerColumn;
+        const int nbSpritesPerLine = 2; // Nombre de sprite par ligne dans le fichier
+        const int nbSpritesPerColumn = 2; // Nombre de sprite par colonne dans le fichier
+        const int nbSprites = nbSpritesPerLine * nbSpritesPerColumn; // Nombre de sprite total
 
 
         void fileSize(FILE* file);

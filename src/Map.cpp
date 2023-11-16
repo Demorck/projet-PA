@@ -62,13 +62,16 @@ Map::Map(const char* textFileName, const char* tilemapFileName, SDL_Window* wind
         rectOnScreen[i] = {0, 0, 0, 0};
     }  
 
-    for (int i = 0; i < nbOfRectangles; i++)
+    int widthSprite = SCREEN_WIDTH / nbCol;
+    int heightSprite = SCREEN_HEIGHT / nbLin;
+
+    for (int i = 0; i < nbOfRectangles; i++) 
     {
         SDL_Rect currentRect;
-        currentRect.x = (i % nbLin) * (size.x / nbSpritesPerLine);
-        currentRect.y = (i / nbLin) * (size.y / nbSpritesPerColumn);
-        currentRect.w = size.x / nbSpritesPerLine;
-        currentRect.h = size.y / nbSpritesPerColumn;
+        currentRect.x = (i % nbCol) * widthSprite;
+        currentRect.y = (i / nbCol) * heightSprite;
+        currentRect.w = widthSprite;
+        currentRect.h = heightSprite;
 
         rectOnScreen[i] = currentRect;
     }
@@ -165,6 +168,7 @@ void Map::readFile(const char* textFileName)
     }
 
     fclose( file );
+    
 }
 
 void Map::allocate2Dtab(){
