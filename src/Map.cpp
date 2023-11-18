@@ -3,12 +3,24 @@
 #include <iostream>
 #include <Map.hpp>
 
+/**
+ * @param textFileName La source du fichier texte pour créer la carte
+ * @param tilemapFileName La source du fichier png pour créer les sprites de la map
+ * @param window La fenêtre SDL pour rendre la surface
+ * @param renderer La fenêtre SDL pour rendre dans render
+ * 
+ * Le constructeur lit le fichier texte et créer 2 tableaux : un tableau de SDL_Rect appelé tabRect qui sauvegarde l'emplacement des rectangles des sprites
+ * L'autre est un SDL_Rect appelé rectOnScreen qui calcule où il doit afficher les différents sprite sur l'écran.
+*/
 Map::Map(const char* textFileName, const char* tilemapFileName, SDL_Window* window, SDL_Renderer* renderer)
     : textFileName(textFileName)
 {
     nbCol = 0;
     nbLin = 0;
     
+    /**
+     * Lit le fichier et store le nombre de lignes et de colonne dans nbLin et nbCol
+    */
     readFile(textFileName);
 
     SDL_Surface* optimizedSurface = NULL;
@@ -17,26 +29,17 @@ Map::Map(const char* textFileName, const char* tilemapFileName, SDL_Window* wind
     {
         printf( "Unable to load image %s! SDL_image Error: %s\n", tilemapFileName, IMG_GetError() );
     }
-    else
-    {
-        
-        optimizedSurface = SDL_ConvertSurface( loadedSurface, SDL_GetWindowSurface(window)->format, 0 );
-        if( optimizedSurface == NULL )
-        {
-            printf( "Unable to optimize image %s! SDL Error: %s\n", tilemapFileName, SDL_GetError() );
-        }
 
-        //Get rid of old loaded surface
-        SDL_FreeSurface( loadedSurface );
-    }
+    tilemap = SDL_CreateTextureFromSurface(renderer, loadedSurface);
 
-    tilemap = SDL_CreateTextureFromSurface(renderer, optimizedSurface);
-
+    // Récupère la taille du fichier de sprite
     SDL_Point size;
     SDL_QueryTexture(tilemap, NULL, NULL, &size.x, &size.y);
 
+    // ********************************************************* //
     tabRect =(SDL_Rect*)malloc(nbLin * sizeof(SDL_Rect));
 
+    // Initialise tous les rectangles à zéro
     for(int i = 0; i < nbSprites; i++){
         tabRect[i] = {0, 0, 0, 0};
     }
@@ -108,6 +111,10 @@ void Map::render(SDL_Renderer* renderer)
     }
 }
 
+/**
+ * @param file Le fichier ouvert avec fopen
+ * Retourne dans Map.nbCol et Map.nbLin le nombre de lignes et de colonnes du fichier
+*/
 void Map::fileSize(FILE* file)
 {
     int current_col = 0;
@@ -131,6 +138,10 @@ void Map::fileSize(FILE* file)
     nbCol = max_col;
 }
 
+/**
+ * @param textFileName La source du fichier à ouvrir pour construire la map
+ * Dans cette fonction, on appelle fileSize(file) pour récupérer le nombre de lignes et de colonne dans le fichier et on alloue le tableau.
+*/
 void Map::readFile(const char* textFileName)
 {
     FILE* file = fopen(textFileName, "r");
@@ -171,6 +182,9 @@ void Map::readFile(const char* textFileName)
     
 }
 
+/**
+ * Gestion d'allocation du tableau 2D
+*/
 void Map::allocate2Dtab(){
     tab = (int**)malloc(nbLin * sizeof(int*));
 
