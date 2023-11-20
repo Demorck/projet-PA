@@ -9,7 +9,7 @@
 class Player : public Entity
 {   
     public:
-        Player(int hp, float speed, float x, float y, int width, int height);
+        Player(int hp, float speed, float x, float y, int width, int height, SDL_Renderer* renderer);
         ~Player();
         void render(SDL_Renderer* renderer);
         void update(double time);

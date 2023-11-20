@@ -2,15 +2,15 @@
 #include <iostream>
 
 
-Enemy::Enemy(int hp, float speed, float x, float y, int width, int height)
+Enemy::Enemy(int hp, float speed, float x, float y, int width, int height, SDL_Renderer* renderer)
     : Entity(hp, speed, x, y, width, height)
 {
     this->moveDown = false;
     this->moveUp = false;
     this->moveLeft = false;
     this->moveRight = false;
-    Render& r = Render::getInstance();
-    animation = new Animation(x, y, 640, 640, 1, 1.f, "assets/sprites/max.jpg", r.getRenderer());
+    
+    animation = new Animation(x, y, 640, 640, 1, 1.f, "assets/sprites/max.jpg", renderer);
 }
 
 Enemy::~Enemy()

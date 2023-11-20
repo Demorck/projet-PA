@@ -1,15 +1,16 @@
 #include <Player.hpp>
 #include <iostream>
 
-Player::Player(int hp, float speed, float x, float y, int width, int height)
+Player::Player(int hp, float speed, float x, float y, int width, int height, SDL_Renderer* renderer)
     : Entity(hp, speed, x, y, width, height)
 {
     this->moveDown = false;
     this->moveUp = false;
     this->moveLeft = false;
     this->moveRight = false;
-    Render& r = Render::getInstance();
-    animation = new Animation(x, y, width, height, 4, 1.f, "assets/sprites/player2.png", r.getRenderer());
+    
+    animation = new Animation(x, y, width, height, 4, 1.f, "assets/sprites/player2.png", renderer);
+    
 }
 
 void Player::render(SDL_Renderer* renderer)

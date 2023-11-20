@@ -14,7 +14,6 @@
 // #include <Helpers/Animation.hpp>
 #include <Helpers/Enums.hpp>
 #include <UI/Menu.hpp>
-#include <UI/Render.hpp>
 #include <Map.hpp>
 #include <Helpers/Struct.hpp>
 
@@ -29,7 +28,8 @@ class Game
         ~Game();
 
     private:
-        Render& render = Render::getInstance();
+        SDL_Renderer* renderer;
+        SDL_Window* window;
         bool isRuning;
         const std::string& title;
         

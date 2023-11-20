@@ -2,6 +2,7 @@
 #define RENDER_HPP
 
 #include <SDL2/SDL.h>
+#include <iostream>
 
 class Render
 {
@@ -9,9 +10,10 @@ class Render
         Render(Render const&) = delete;
         void operator=(Render const&) = delete;
 
-        static Render& getInstance()
+        static Render* getInstance()
         {
-            static Render instance;
+            static Render* instance = 0;
+            if(!instance)instance = new Render();
             return instance;
         }
 

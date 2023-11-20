@@ -12,6 +12,7 @@ Game::Game(const std::string& title)
 {
     this->isRuning = true;
     this->init();
+    
     currentState = MainMenu;
 }
 
@@ -37,7 +38,21 @@ void Game::init()
         exit(1);
     }
 
-    this->player = new Player(20, 160.0f, 50, 50, 64, 64);
+    window = SDL_CreateWindow(TITLE, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
+    if (window == nullptr)
+    {
+        std::cerr << "SDL_CreateWindow error: " << SDL_GetError() << std::endl;
+        exit(1);
+    }
+
+    renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
+    if (renderer == nullptr)
+    {
+        std::cerr << "SDL_CreateRenderer error: " << SDL_GetError() << std::endl;
+        exit(1);
+    };
+
+    this->player = new Player(20, 160.0f, 50, 50, 64, 64, renderer);
     // player->getAnimation()->createTextureFromSurface("assets/sprites/player.png", renderer, window);
     for (int i = 0; i < 5; i++)
     {
@@ -48,35 +63,40 @@ void Game::init()
     
     // this->enemies = new Enemy(20, 40.0f, 500, 500, 40, 40);
     this->equipement = new Equipement();
-
-    mainMenu = new Menu(render.getRenderer(), SCREEN_WIDTH, SCREEN_HEIGHT);
-    map = new Map("assets/map/map1.txt", "assets/sprites/tilemap.png", render.getRenderer());
+ 
+    mainMenu = new Menu(renderer, SCREEN_WIDTH, SCREEN_HEIGHT);
+    map = new Map("assets/map/map1.txt", "assets/sprites/tilemap.png", renderer);
 }
 
 void Game::renderGame()
 {
-    SDL_SetRenderDrawColor(render.getRenderer(), 0, 0, 0, 0);
-    SDL_RenderClear(render.getRenderer());
+    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0);
+    SDL_RenderClear(renderer);
 
+
+    if (renderer == nullptr)
+        std::cout << "Renderer null" << std::endl;
+
+    std::cout << "renderGame execute" << std::endl;
     switch (currentState)
     {
     case MainMenu:
         mainMenu->render();
         break;
     case Settings:
-        // map->render(render.getRenderer());
+        // map->render(renderer);
         break;
     case Run:
     {
-        map->render(render.getRenderer());
-        this->player->render(render.getRenderer());
-        this->equipement->render(render.getRenderer());
+        map->render(renderer);
+        this->player->render(renderer);
+        this->equipement->render(renderer);
 
         list_t* currentEnemy = enemies;
         while (currentEnemy != nullptr && currentEnemy->val != nullptr)
         {
             Enemy* ennemi = static_cast<Enemy*>(currentEnemy->val);
-            ennemi->render(render.getRenderer());
+            ennemi->render(renderer);
             currentEnemy = currentEnemy->next;
         }
 
@@ -84,7 +104,7 @@ void Game::renderGame()
         while (currentProjectile != nullptr && currentProjectile->val != nullptr)
         {
             Projectile* projectile = static_cast<Projectile*>(currentProjectile->val);
-            projectile->render(render.getRenderer());
+            projectile->render(renderer);
             currentProjectile = currentProjectile->next;
         }
         break;
@@ -93,7 +113,7 @@ void Game::renderGame()
         break;
     }
 
-    SDL_RenderPresent(render.getRenderer());
+    SDL_RenderPresent(renderer);
 }
 
 /**
@@ -247,7 +267,7 @@ void Game::update()
                 ennemi->update(deltaTime);
                 distanceEnemy = ennemi->distance(player);
 
-                ennemi->render(render.getRenderer());
+                ennemi->render(renderer);
                 currentEnemy = currentEnemy->next;
             }
 
@@ -283,7 +303,7 @@ void Game::update()
                 }
 
                 // distanceEnemy = projectile->distance(player);
-                projectile->render(render.getRenderer());
+                projectile->render(renderer);
             }
 
             /**
@@ -346,7 +366,7 @@ void Game::update()
  {
 
     list_t* nouvelEnnemi = new list_t;
-    nouvelEnnemi->val = new Enemy(20, 40.0f, x, y, width, height);
+    nouvelEnnemi->val = new Enemy(20, 40.0f, x, y, width, height, renderer);
     nouvelEnnemi->next = enemies;
     enemies = nouvelEnnemi;
  }
@@ -364,6 +384,7 @@ int main(int argc, char **argv)
     const std::string& title = "Jeu";
     game = new Game(title);
     game->update();
+
     delete game;
 
     return 0;
