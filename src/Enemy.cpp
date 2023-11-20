@@ -10,7 +10,7 @@ Enemy::Enemy(int hp, float speed, float x, float y, int width, int height)
     this->moveLeft = false;
     this->moveRight = false;
     Render& r = Render::getInstance();
-    animation = new Animation(x, y, 640, 640, 1, 1.f, "assets/sprites/max.jpg", r.getRenderer(), r.getWindow());
+    animation = new Animation(x, y, 640, 640, 1, 1.f, "assets/sprites/max.jpg", r.getRenderer());
 }
 
 Enemy::~Enemy()

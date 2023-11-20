@@ -16,6 +16,7 @@
 #include <UI/Menu.hpp>
 #include <UI/Render.hpp>
 #include <Map.hpp>
+#include <Helpers/Struct.hpp>
 
 class Game
 {
@@ -33,14 +34,19 @@ class Game
         const std::string& title;
         
         Player* player;
-        std::vector<Enemy*> enemies;
-        Enemy* enemy;
+        // std::vector<Enemy*> enemies;
         Equipement* equipement;
-        std::vector<Projectile*> projectiles;
+        // std::vector<Projectile*> projectiles;
         Menu* mainMenu;
         Map* map;
 
+        list_t* enemies;
+        list_t* projectiles;
+
         State currentState;
+
+        void addEnemy(float x, float y, int width, int height);
+        void shoot(float angle);
 
 };
 

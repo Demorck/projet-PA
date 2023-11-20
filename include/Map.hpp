@@ -9,7 +9,7 @@
 class Map
 {
     public:
-        Map(const char* textFileName, const char* tilemapFileName,  SDL_Window* window, SDL_Renderer* renderer);
+        Map(const char* textFileName, const char* tilemapFileName,  SDL_Renderer* renderer);
         ~Map();
 
         void render(SDL_Renderer* renderer);

@@ -7,12 +7,12 @@
 class Animation
 {
     public:
-        Animation(float x, float y, int width, int height, int nbFrame, float delay, const char* filepath, SDL_Renderer* renderer, SDL_Window* window);
+        Animation(float x, float y, int width, int height, int nbFrame, float delay, const char* filepath, SDL_Renderer* renderer);
         ~Animation();
 
         void animate(SDL_Renderer* renderer, SDL_Rect where);
         void update(float deltaTime);
-        void createTextureFromSurface(const char* filepath, SDL_Renderer* renderer, SDL_Window* window);
+        void createTextureFromSurface(const char* filepath, SDL_Renderer* renderer);
         
     private:
         float x;

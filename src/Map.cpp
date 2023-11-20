@@ -12,7 +12,7 @@
  * Le constructeur lit le fichier texte et créer 2 tableaux : un tableau de SDL_Rect appelé tabRect qui sauvegarde l'emplacement des rectangles des sprites
  * L'autre est un SDL_Rect appelé rectOnScreen qui calcule où il doit afficher les différents sprite sur l'écran.
 */
-Map::Map(const char* textFileName, const char* tilemapFileName, SDL_Window* window, SDL_Renderer* renderer)
+Map::Map(const char* textFileName, const char* tilemapFileName, SDL_Renderer* renderer)
     : textFileName(textFileName)
 {
     nbCol = 0;
@@ -31,6 +31,7 @@ Map::Map(const char* textFileName, const char* tilemapFileName, SDL_Window* wind
     }
 
     tilemap = SDL_CreateTextureFromSurface(renderer, loadedSurface);
+    SDL_FreeSurface(loadedSurface);
 
     // Récupère la taille du fichier de sprite
     SDL_Point size;
@@ -44,6 +45,12 @@ Map::Map(const char* textFileName, const char* tilemapFileName, SDL_Window* wind
         tabRect[i] = {0, 0, 0, 0};
     }
 
+    /**
+     * *  Dans le header, il y a 2 paramètres : le nombre de sprite par ligne et par colonne.
+     * * La largeur de chaque sprite est de la taille de la spritesheeet / nombre de sprite par ligne. Pareil pour la hauteur
+     * * Niveau positionnement, c'est un for-loop de i jusqu'au nombre de sprite. Niveau abscisse, on change tout le temps et on revient à zéro dès qu'on a notre nombre de sprite par ligne
+     * * Niveau ordonnée, il faut changer dès que la ligne change. C'est la partie entière d'une division.
+    */
     for (int i = 0; i < nbSprites; i++)
     {
         SDL_Rect currentRect;
@@ -55,7 +62,8 @@ Map::Map(const char* textFileName, const char* tilemapFileName, SDL_Window* wind
         tabRect[i] = currentRect;
     }
 
-    SDL_Surface* surface = SDL_GetWindowSurface(window);
+    // ******************************************************** //
+    
     rectOnScreen = (SDL_Rect*)malloc(nbLin * nbCol * sizeof(SDL_Rect));
 
     int nbOfRectangles = nbLin * nbCol;
@@ -97,14 +105,37 @@ void Map::render(SDL_Renderer* renderer)
     {
         for (int j = 0; j < nbCol; j++)
         {
-            // Vérifiez que i et j sont dans les limites
+            // Vérifie que i et j sont dans les limites
             if (i < nbLin && j < nbCol)
             {
                 // Si on met des numéros non autorisés
                 if (tab[i][j] >= 0 && tab[i][j] < nbSprites)
                 {
-                    SDL_Rect currentRect = tabRect[tab[i][j]];
+                    SDL_Rect currentRect = tabRect[tab[i][j]];                    
                     SDL_RenderCopy(renderer, tilemap, &currentRect, &rectOnScreen[i * nbCol + j]);
+                    
+                    // Ca permet de créer un une colonne de plus à droite au cas-où 
+                    if (j == nbCol - 1)
+                    {
+                        SDL_Rect additionalRect = rectOnScreen[i * nbCol + j];
+                        additionalRect.x += rectOnScreen[i * nbCol + j].w;
+                        SDL_RenderCopy(renderer, tilemap, &currentRect, &additionalRect);
+                    }
+                    // Ca permet de créer un une ligne  de plus en bas au cas-où 
+                    if (i == nbLin - 1)
+                    {
+                        SDL_Rect additionalRect = rectOnScreen[i * nbCol + j];
+                        additionalRect.y += rectOnScreen[i * nbCol + j].h;
+                        SDL_RenderCopy(renderer, tilemap, &currentRect, &additionalRect);
+                    }
+                    // Ca permet de créer un tile tout en bas à droite au cas-où
+                    if (i == nbLin - 1 && j == nbCol - 1)
+                    {
+                        SDL_Rect additionalRect = rectOnScreen[i * nbCol + j];
+                        additionalRect.x += rectOnScreen[i * nbCol + j].w;
+                        additionalRect.y += rectOnScreen[i * nbCol + j].h;
+                        SDL_RenderCopy(renderer, tilemap, &currentRect, &additionalRect);
+                    }
                 }
             }
         }
