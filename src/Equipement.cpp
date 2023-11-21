@@ -2,19 +2,25 @@
 #include <iostream>
 #include <stdlib.h>
 #include <random>
+#include <time.h>
 
 
 Equipement::Equipement(/* args */)
 {
-   
+    srand(time(NULL));
+
     int minw = 1; 
     int maxw = SCREEN_WIDTH;
-    this->cordx = std::rand() % maxw;
+    this->cordx = rand() % maxw;
 
+    
     int minh = 1; 
     int maxh = SCREEN_HEIGHT;
     
-    this->cordy = std::rand() % maxh;
+    this->cordy = rand() % maxh;
+    
+
+
 }
 
 Equipement::~Equipement()
@@ -39,4 +45,13 @@ int Equipement::getX()
 int Equipement::getY()
 {
     return this->cordy;
+}
+
+void Equipement::setX(int a)
+{
+    this->cordx = a;
+}
+void Equipement::setY(int a)
+{
+    this->cordy = a;
 }

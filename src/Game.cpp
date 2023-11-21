@@ -73,11 +73,6 @@ void Game::renderGame()
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0);
     SDL_RenderClear(renderer);
 
-
-    if (renderer == nullptr)
-        std::cout << "Renderer null" << std::endl;
-
-    std::cout << "renderGame execute" << std::endl;
     switch (currentState)
     {
     case MainMenu:
@@ -341,10 +336,13 @@ void Game::update()
                 //     ++i;
                 // }
             // }
-
-            if (player->collision(equipement))
+           if(equipement != nullptr && player->collision(equipement))
             {
-                delete equipement;
+               
+                if(equipement != nullptr)
+                    delete equipement;
+                equipement = nullptr;
+                
                 player->setSpeed(player->getSpeed() * 2);
             }
             break;

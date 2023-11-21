@@ -8,12 +8,15 @@ class Equipement
     private:
         int cordx;
         int cordy;
+        //int typ;
     public:
         Equipement(/* args */);
         ~Equipement();
         void   render(SDL_Renderer* renderer);
         int getX();
         int getY();
+        void setX(int a);
+        void setY(int a);
 };
 
 
