@@ -6,6 +6,9 @@
 #include <SDL2/SDL_image.h>
 #include <Constant.hpp>
 
+/**
+ * Try & catch pour contrôler le fichier
+*/
 class Map
 {
     public:

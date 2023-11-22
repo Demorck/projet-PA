@@ -40,8 +40,8 @@ class Game
         Menu* mainMenu;
         Map* map;
 
-        list_t* enemies;
-        list_t* projectiles;
+        ennemies_t* enemies;
+        projectiles_t* projectiles;
 
         State currentState;
 
