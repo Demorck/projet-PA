@@ -8,7 +8,7 @@ Text::Text(SDL_Renderer* renderer, std::string fontPath, std::string text, int x
     loadFont();
 
     // Créer la surface
-    surface = TTF_RenderText_Blended(font, text.c_str(), color);
+    SDL_Surface* surface = TTF_RenderText_Blended(font, text.c_str(), color);
     if (surface == nullptr) {
         throw std::runtime_error("Failed to create surface: " + std::string(TTF_GetError()));
     }
@@ -28,12 +28,12 @@ Text::Text(SDL_Renderer* renderer, int x, int y, int width, int height, SDL_Colo
 {
 
     fontPath = "assets/Roboto-Regular.ttf";
-    text = "feur";
+    text = "Lorem Ipsum";
 
     loadFont();
 
     // Créer la surface
-    surface = TTF_RenderText_Blended(font, text.c_str(), color);
+    SDL_Surface* surface = TTF_RenderText_Blended(font, text.c_str(), color);
     if (surface == nullptr) {
         throw std::runtime_error("Failed to create surface: " + std::string(TTF_GetError()));
     }
@@ -53,10 +53,8 @@ Text::~Text()
     SDL_DestroyTexture(textTexture);
 }
 
-void Text::render(bool clear)
+void Text::render()
 {
-    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0);
-    if (clear) SDL_RenderClear(renderer);
     SDL_Rect textRect = { x + width / 2, y + height / 2, 0, 0 };
     if (SDL_QueryTexture(textTexture, NULL, NULL, &textRect.w, &textRect.h) != 0) {
         std::cerr << "SDL_QueryTexture Text: " << SDL_GetError() << std::endl;
@@ -76,7 +74,7 @@ void Text::setText(const std::string& newText)
 {
     this->text = newText;
 
-    surface = TTF_RenderText_Blended(font, text.c_str(), color);
+    SDL_Surface* surface = TTF_RenderText_Blended(font, text.c_str(), color);
     if (surface == nullptr) {
         throw std::runtime_error("Failed to create surface: " + std::string(TTF_GetError()));
     }

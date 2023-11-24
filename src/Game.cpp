@@ -52,12 +52,13 @@ void Game::init()
         exit(1);
     };
 
-    this->player = new Player(20, 160.0f, 50, 50, 64, 64, renderer);
+    this->player = new Player(100, 160.0f, 50, 50, 64, 64, renderer);
     // player->getAnimation()->createTextureFromSurface("assets/sprites/player.png", renderer, window);
     for (int i = 0; i < 5; i++)
     {
         addEnemy(SCREEN_WIDTH / 3 + 50 * i, SCREEN_HEIGHT / 2, 30, 30);
     }
+    this->barHp = new Bar(10, 10, 100, 30, {255, 255, 0, 0});
 
     int SDL_EnableKeyRepeat(0);
     
@@ -75,37 +76,49 @@ void Game::renderGame()
 
     switch (currentState)
     {
-    case MainMenu:
-        mainMenu->render();
-        break;
-    case Settings:
-        map->render(renderer);
-        break;
-    case Run:
-    {
-        map->render(renderer);
-        this->player->render(renderer);
-        this->equipement->render(renderer);
-
-        ennemies_t* currentEnemy = enemies;
-        while (currentEnemy != nullptr && currentEnemy->val != nullptr)
+        case MainMenu:
+            mainMenu->render();
+            break;
+        case Settings:
+            map->render(renderer);
+            break;
+        case Run:
         {
-            Enemy* ennemi = currentEnemy->val;
-            ennemi->render(renderer);
-            currentEnemy = currentEnemy->next;
-        }
+            map->render(renderer);
+            this->player->render(renderer);
+            if (this->equipement != nullptr)
+            {
+                this->equipement->render(renderer);
+            }
 
-        projectiles_t* currentProjectile = projectiles;
-        while (currentProjectile != nullptr && currentProjectile->val != nullptr)
-        {
-            Projectile* projectile = currentProjectile->val;
-            projectile->render(renderer);
-            currentProjectile = currentProjectile->next;
+            ennemies_t* currentEnemy = enemies;
+            while (currentEnemy != nullptr && currentEnemy->val != nullptr)
+            {
+                Enemy* ennemi = currentEnemy->val;
+                ennemi->render(renderer);
+                currentEnemy = currentEnemy->next;
+            }
+
+            projectiles_t* currentProjectile = projectiles;
+            while (currentProjectile != nullptr && currentProjectile->val != nullptr)
+            {
+                Projectile* projectile = currentProjectile->val;
+                projectile->render(renderer);
+                currentProjectile = currentProjectile->next;
+            }
+
+            barHp->render(renderer);
+            break;
         }
-        break;
-    }
-    default:
-        break;
+        case GameOver:
+        {       
+            Text* g = new Text(renderer, 50, 150, 400, 300, {255, 255, 255, 255});
+            g->setText("Game Over sale merde");
+            g->render();
+            break;
+        }
+        default:
+            break;
     }
 
     SDL_RenderPresent(renderer);
@@ -152,6 +165,9 @@ void Game::handleEvents()
                         break;
                     case SDLK_o:
                         addEnemy(SCREEN_WIDTH / 3 + 200, SCREEN_HEIGHT / 2, 150, 150);
+                        break;
+                    case SDLK_h:
+                        player->setHP(player->getHP() + 10);
                         break;
                     case SDLK_p:
                     {
@@ -227,7 +243,7 @@ void Game::handleEvents()
 void Game::update()
 {
     Uint32 currentTime, lastTime = SDL_GetTicks();
-    double deltaTime;
+    double deltaTime, elapsedTime;
     Enemy* closestEnemy;
     float distanceEnemy;
     float minDistance;
@@ -240,6 +256,8 @@ void Game::update()
 
         this->player->update(deltaTime);
         minDistance = 200000.0f;
+
+        elapsedTime += deltaTime;
 
         switch (currentState)
         {
@@ -256,11 +274,13 @@ void Game::update()
             while (currentEnemy != nullptr && currentEnemy->val != nullptr)
             {
                 Enemy* ennemi = currentEnemy->val;
-                // if (ennemi->collision(player))
-                // {
-                //     enemies.erase(enemies.begin());
-                //     enemies.push_back(new Enemy(20, 60.0f, 500, 500, 30, 30));
-                // }
+                if (ennemi->collision(player) && elapsedTime >= 1.f)
+                {
+                    player->setHP(player->getHP() - 10);
+
+                    // printf("%d", player->getHP());
+                    elapsedTime = 0.f;
+                }
                 ennemi->behavior(player);
                 ennemi->update(deltaTime);
                 distanceEnemy = ennemi->distance(player);
@@ -304,41 +324,6 @@ void Game::update()
                 projectile->render(renderer);
             }
 
-            /**
-             * Si un projectile touche un ennemi.
-             * ! Pour le moment, ça enlève l'ennemi. A terme, ça doit enlever de la vie.
-            */
-            // for (auto i = projectiles.begin(); i != projectiles.end();)
-            // {
-            //     (*i)->update(deltaTime);
-
-            //     bool projectileRemoved = false;
-
-            //     for (auto j = enemies.begin(); j != enemies.end();)
-            //     {
-            //         if ((*j)->collision(*i))
-            //         {
-            //             delete *j;
-            //             j = enemies.erase(j);
-
-            //             delete *i;
-            //             i = projectiles.erase(i);
-
-            //             projectileRemoved = true;
-            //             break;  
-            //         }
-            //         else
-            //         {
-            //             ++j;
-            //         }
-            //     }
-
-                // Si un projectile n'est pas enlevé, incrémente l'itérateur car erase renvoie le prochain dans std::vector
-                // if (!projectileRemoved)
-                // {
-                //     ++i;
-                // }
-            // }
            if(equipement != nullptr && player->collision(equipement))
             {
                
@@ -348,10 +333,25 @@ void Game::update()
                 
                 player->setSpeed(player->getSpeed() * 2);
             }
+
+            if(player->collision(barHp))
+            {
+                barHp->moveBar();
+            }
+
+            barHp->setWidth(player->getHP());
+
+            if (player->getHP() <= 0)
+            {
+                currentState = GameOver;
+            }
+            
             break;
         }
         
         case Settings:
+            break;
+        case GameOver:
             break;
         default:
             break;
@@ -363,14 +363,13 @@ void Game::update()
    
 }
 
- void Game::addEnemy(float x, float y, int width, int height)
- {
-
+void Game::addEnemy(float x, float y, int width, int height)
+{
     ennemies_t* nouvelEnnemi = new ennemies_t;
     nouvelEnnemi->val = new Enemy(20, 40.0f, x, y, width, height, renderer);
     nouvelEnnemi->next = enemies;
     enemies = nouvelEnnemi;
- }
+}
 
 void Game::shoot(float angle)
 {

@@ -14,6 +14,8 @@ typedef struct projectiles {
     struct projectiles* next = nullptr;
 } projectiles_t;
 
+/******************************************/
+
 void freeList(ennemies_t* l)
 {
     if (l != nullptr)
@@ -55,6 +57,8 @@ ennemies_t* remove(ennemies_t* from, Enemy* what)
     return from;
 }
 
+/************************************************/
+
 void freeList(projectiles_t* l)
 {
     if (l != nullptr)
@@ -95,5 +99,7 @@ projectiles_t* remove(projectiles_t* from, Projectile* what)
 
     return from;
 }
+
+/************************************************/
 
 #endif

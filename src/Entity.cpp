@@ -45,6 +45,7 @@ bool Entity::collision(Entity* entity)
         }
     return false;
 }
+
 bool Entity::collision(Equipement* equipement){
     if(this->x + this->width >= equipement->getX() &&
        this->x <= equipement->getX() + 30 &&
@@ -64,6 +65,17 @@ bool Entity::collision(Projectile* projectile)
         {
             return true;
         }
+    return false;
+}
+
+bool Entity::collision(Bar* bar){
+    SDL_Rect r = bar->getRect();
+    if(this->x + this->width >= r.x &&
+       this->x <= r.x + r.w &&
+       this->y + this->height >= r.y &&
+       this->y <= r.y + r.h){
+            return true;
+       }
     return false;
 }
 

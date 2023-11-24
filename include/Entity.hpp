@@ -3,6 +3,7 @@
 #include <SDL2/SDL.h>
 #include <Projectile.hpp>
 #include <Equipement.hpp>
+#include <UI/Bar.hpp>
 #include <Helpers/Animation.hpp>
 
 enum MovingDirection {UP, RIGHT, DOWN, LEFT, IDLE}; 
@@ -19,6 +20,7 @@ class Entity
         bool collision(Entity* entity);
         bool collision(Projectile* projectile);
         bool collision(Equipement* equipement);
+        bool collision(Bar* bar);
 
         int getHP();
         float getSpeed();

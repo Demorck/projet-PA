@@ -16,8 +16,7 @@ Menu::Menu(SDL_Renderer* renderer, int width, int height)
 
 Menu::~Menu()
 {
-    SDL_DestroyTexture(textTexture);
-    SDL_DestroyTexture(inputTexture);
+    SDL_DestroyTexture(titleTexture);
 }
 
 /**
@@ -65,8 +64,7 @@ void Menu::clearMenu()
     {
         delete buttons[i];
     }
-    SDL_DestroyTexture(textTexture);
-    SDL_DestroyTexture(inputTexture);
+    SDL_DestroyTexture(titleTexture);
 }
 
 void Menu::loadFont()

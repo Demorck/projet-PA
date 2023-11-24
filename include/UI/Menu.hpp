@@ -30,22 +30,12 @@ class Menu
 
         Text* title;
         SDL_Texture* titleTexture;
-        
-        SDL_Texture* inputTextTexture;
-        SDL_Texture* bubbleSortTexture;
-        SDL_Texture* bubbleSortTextTexture;
 
         int width;
         int height;
 
         SDL_Color textColor;
         SDL_Rect textRect;
-
-        SDL_Texture* textTexture;
-        std::string inputString;
-
-        SDL_Rect inputRect;
-        SDL_Texture* inputTexture;
 
         Button* buttons[3];
 };

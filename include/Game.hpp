@@ -7,15 +7,18 @@
 #include <vector>
 #include <list>
 #include <algorithm>
+
+#include <Helpers/Enums.hpp>
+#include <Helpers/Struct.hpp>
+
 #include <Player.hpp>
 #include <Enemy.hpp>
 #include <Equipement.hpp>
 #include <Projectile.hpp>
-// #include <Helpers/Animation.hpp>
-#include <Helpers/Enums.hpp>
-#include <UI/Menu.hpp>
 #include <Map.hpp>
-#include <Helpers/Struct.hpp>
+
+#include <UI/Menu.hpp>
+#include <UI/Bar.hpp>
 
 class Game
 {
@@ -39,6 +42,7 @@ class Game
         // std::vector<Projectile*> projectiles;
         Menu* mainMenu;
         Map* map;
+        Bar* barHp;
 
         ennemies_t* enemies;
         projectiles_t* projectiles;
