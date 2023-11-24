@@ -37,19 +37,19 @@ class Game
         const std::string& title;
         
         Player* player;
-        // std::vector<Enemy*> enemies;
-        Equipement* equipement;
-        // std::vector<Projectile*> projectiles;
+        
         Menu* mainMenu;
         Map* map;
         Bar* barHp;
 
         ennemies_t* enemies;
         projectiles_t* projectiles;
+        equipements_t* equipements;
 
         State currentState;
 
         void addEnemy(float x, float y, int width, int height);
+        void addEquipement(int typ, SDL_Color couleur);
         void shoot(float angle);
 
 };

@@ -20,6 +20,7 @@ Game::~Game()
 {
     freeList(enemies);
     freeList(projectiles);
+    freeList(equipements);
 }
 
 /**
@@ -53,7 +54,7 @@ void Game::init()
     };
 
     this->player = new Player(100, 160.0f, 50, 50, 64, 64, renderer);
-    // player->getAnimation()->createTextureFromSurface("assets/sprites/player.png", renderer, window);
+    
     for (int i = 0; i < 5; i++)
     {
         addEnemy(SCREEN_WIDTH / 3 + 50 * i, SCREEN_HEIGHT / 2, 30, 30);
@@ -62,8 +63,12 @@ void Game::init()
 
     int SDL_EnableKeyRepeat(0);
     
-    // this->enemies = new Enemy(20, 40.0f, 500, 500, 40, 40);
-    this->equipement = new Equipement();
+    
+    for (int i = 0; i < 1; i++)//modifier pour eviter les crash 
+    {
+        SDL_Color coult = {i*50,i*75,i*100,i*125};
+        addEquipement(i,coult);
+    }
  
     mainMenu = new Menu(renderer, SCREEN_WIDTH, SCREEN_HEIGHT);
     map = new Map("assets/map/map1.txt", "assets/sprites/tilemap.png", renderer);
@@ -86,11 +91,12 @@ void Game::renderGame()
         {
             map->render(renderer);
             this->player->render(renderer);
-            if (this->equipement != nullptr)
-            {
-                this->equipement->render(renderer);
+            equipements_t* currentEquipement = equipements; 
+            while(currentEquipement != nullptr && currentEquipement->val != nullptr){
+                Equipement* equipement = currentEquipement->val;
+                equipement->render(renderer);
+                currentEquipement = currentEquipement->next;
             }
-
             ennemies_t* currentEnemy = enemies;
             while (currentEnemy != nullptr && currentEnemy->val != nullptr)
             {
@@ -160,8 +166,7 @@ void Game::handleEvents()
                         player->move(LEFT, false);
                         break;
                     case SDLK_e:
-                        this->player->setSpeed(160.f);
-                        this->equipement = new Equipement();
+                        addEquipement(0,{255,0,0,0});
                         break;
                     case SDLK_o:
                         addEnemy(SCREEN_WIDTH / 3 + 200, SCREEN_HEIGHT / 2, 150, 150);
@@ -324,14 +329,26 @@ void Game::update()
                 projectile->render(renderer);
             }
 
-           if(equipement != nullptr && player->collision(equipement))
-            {
-               
-                if(equipement != nullptr)
-                    delete equipement;
-                equipement = nullptr;
+            equipements_t* currentstrucEquipement = equipements;
+            while(currentstrucEquipement != nullptr){
+                Equipement* currentEquipement = currentstrucEquipement->val;
+                if(player->collision(currentEquipement)){
+                    
+                    if(currentEquipement->getType() == 0){
+                        player->setSpeed(player->getSpeed() * 2);
+                    }
+                    if(currentEquipement->getType() == 1){
+                        player->setHP(player->getSpeed() + 5);
+                    }
+                    if(currentEquipement->getType() == 2){
+                        //modif le score
+                    }
                 
-                player->setSpeed(player->getSpeed() * 2);
+                    equipements = remove(equipements, currentEquipement);
+                
+                }
+                
+                currentstrucEquipement = currentstrucEquipement->next;
             }
 
             if(player->collision(barHp))
@@ -369,6 +386,14 @@ void Game::addEnemy(float x, float y, int width, int height)
     nouvelEnnemi->val = new Enemy(20, 40.0f, x, y, width, height, renderer);
     nouvelEnnemi->next = enemies;
     enemies = nouvelEnnemi;
+}
+
+void Game::addEquipement(int typ, SDL_Color couleur)
+{
+    equipements_t* nouveauEquipement = new equipements_t;
+    nouveauEquipement->val= new Equipement(0,{255,0,0,0});
+    nouveauEquipement->next = equipements;
+    equipements = nouveauEquipement;
 }
 
 void Game::shoot(float angle)
