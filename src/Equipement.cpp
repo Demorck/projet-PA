@@ -5,7 +5,7 @@
 #include <time.h>
 
 
-Equipement::Equipement(/* args */)
+Equipement::Equipement(int type, SDL_Color couleur)
 {
     srand(time(NULL));
 
@@ -19,8 +19,9 @@ Equipement::Equipement(/* args */)
     
     this->cordy = rand() % maxh;
     
+    this->typ = type ;
 
-
+    this->couleur = couleur;
 }
 
 Equipement::~Equipement()
@@ -47,6 +48,12 @@ int Equipement::getY()
     return this->cordy;
 }
 
+int Equipement::getType()
+{
+    return this->typ;
+}
+
+
 void Equipement::setX(int a)
 {
     this->cordx = a;
@@ -54,4 +61,13 @@ void Equipement::setX(int a)
 void Equipement::setY(int a)
 {
     this->cordy = a;
+}
+
+void Equipement::setType(int type)
+{
+    this->typ = type ;
+}
+void Equipement::setCouleur(SDL_Color couleur)
+{
+    this->couleur = couleur ;
 }

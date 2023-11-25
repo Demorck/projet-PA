@@ -14,6 +14,11 @@ typedef struct projectiles {
     struct projectiles* next = nullptr;
 } projectiles_t;
 
+typedef struct equipements {
+    Equipement* val;
+    struct equipements* next = nullptr;
+} equipements_t;
+
 /******************************************/
 
 void freeList(ennemies_t* l)
@@ -73,6 +78,50 @@ projectiles_t* remove(projectiles_t* from, Projectile* what)
 {
     projectiles_t* current = from; 
     projectiles_t* previous = nullptr;
+
+    while (current != nullptr && current->val != what)
+    {
+        previous = current;
+        current = current->next;
+        if (current->val == what) break;
+        
+    }
+
+    if (current != nullptr)
+    {
+        if (previous != nullptr)
+        {
+            previous->next = current->next;
+        }
+        else
+        {
+            from = current->next;
+        }
+
+        delete current->val;
+        delete current;
+    }
+
+    return from;
+}
+
+/************************************************/
+
+void freeList(equipements_t* l)
+{
+    if (l != nullptr)
+    {
+        delete l->val;
+        freeList(l->next);
+        delete l;
+    }
+}
+
+
+equipements_t* remove(equipements_t* from, Equipement* what)
+{
+    equipements_t* current = from; 
+    equipements_t* previous = nullptr;
 
     while (current != nullptr && current->val != what)
     {
