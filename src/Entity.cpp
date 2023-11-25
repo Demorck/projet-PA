@@ -1,5 +1,6 @@
 #include <Entity.hpp>
 #include <iostream>
+#include <fstream>
 
 Entity::Entity(int hp, float speed, float x, float y, int width, int height)
     : hp(hp), speed(speed), x(x), y(y), width(width), height(height)
@@ -147,4 +148,39 @@ void Entity::setHeight(int height)
 void Entity::setFacing(MovingDirection facing)
 {
     this->facing = facing; 
+}
+
+
+void Entity::save(std::ofstream& file)
+{
+    if (file.is_open())
+    {
+        file.write(reinterpret_cast<const char*>(&hp), sizeof(hp));
+        file.write(reinterpret_cast<const char*>(&speed), sizeof(speed));
+        file.write(reinterpret_cast<const char*>(&x), sizeof(x));
+        file.write(reinterpret_cast<const char*>(&y), sizeof(y));
+        file.write(reinterpret_cast<const char*>(&width), sizeof(width));
+        file.write(reinterpret_cast<const char*>(&height), sizeof(height));
+    }
+    else
+    {
+        std::cerr << "Unable to open file for writing. " << std::endl;
+    }
+}
+
+void Entity::load(std::ifstream& file)
+{
+    if (file.is_open())
+    {
+        file.read(reinterpret_cast<char*>(&hp), sizeof(hp));
+        file.read(reinterpret_cast<char*>(&speed), sizeof(speed));
+        file.read(reinterpret_cast<char*>(&x), sizeof(x));
+        file.read(reinterpret_cast<char*>(&y), sizeof(y));
+        file.read(reinterpret_cast<char*>(&width), sizeof(width));
+        file.read(reinterpret_cast<char*>(&height), sizeof(height));
+    }
+    else
+    {
+        std::cerr << "Unable to open file for reading." << std::endl;
+    }
 }

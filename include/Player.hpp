@@ -18,6 +18,7 @@ class Player : public Entity
         void handleEvents();
         bool isMoving(MovingDirection move);
         void move(MovingDirection move, bool isMoving);
+
     
     private:
         bool moveLeft;

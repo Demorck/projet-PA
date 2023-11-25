@@ -2,6 +2,7 @@
 #include <Game.hpp>
 #include <Constant.hpp>
 #include <math.h>
+#include <fstream>
 
 
 Game* game;
@@ -18,6 +19,7 @@ Game::Game(const std::string& title)
 
 Game::~Game()
 {
+    delete mainMenu;
     freeList(enemies);
     freeList(projectiles);
     freeList(equipements);
@@ -59,7 +61,7 @@ void Game::init()
     {
         addEnemy(SCREEN_WIDTH / 3 + 50 * i, SCREEN_HEIGHT / 2, 30, 30);
     }
-    this->barHp = new Bar(10, 10, 100, 30, {255, 255, 0, 0});
+    this->barHp = new Bar(10, 10, 100, 30, {255, 0, 0, 0});
 
     int SDL_EnableKeyRepeat(0);
     
@@ -71,7 +73,18 @@ void Game::init()
     }
  
     mainMenu = new Menu(renderer, SCREEN_WIDTH, SCREEN_HEIGHT);
-    map = new Map("assets/map/map1.txt", "assets/sprites/tilemap.png", renderer);
+
+    try
+    {
+        map = new Map("assets/map/map1.txt", "assets/sprites/tilemap.png", renderer);
+    }
+    catch(const std::invalid_argument& e)
+    {
+        std::cerr << e.what() << '\n';
+        exit(1);
+    }
+    
+    
 }
 
 void Game::renderGame()
@@ -175,6 +188,12 @@ void Game::handleEvents()
                         break;
                     case SDLK_h:
                         player->setHP(player->getHP() + 10);
+                        break;
+                    case SDLK_n:
+                        saveGame();
+                        break;
+                    case SDLK_b:
+                        loadGame();
                         break;
                     case SDLK_p:
                     {
@@ -407,26 +426,43 @@ void Game::shoot(float angle)
     projectiles_t* proj = new projectiles_t;
     proj->val = new Projectile(player->getX() + player->getWidth() / 2, player->getY() + player->getHeight() / 2, angle, 100.f);
     proj->next = projectiles;
-    projectiles = proj;
+    projectiles = proj;    
+}
 
-    // projectiles_t* currentProjectile = projectiles;
-    // while (currentProjectile != nullptr && currentProjectile->val != nullptr)
-    // {
-    //     Projectile* projectile = currentProjectile->val;
-    //     if (currentProjectile->next == nullptr)
-    //     {
-    //         currentProjectile->next = proj;
-    //         break;
-    //     }
-    // }
+void Game::saveGame()
+{
+    std::string filename = "save.dat";
+    std::ofstream file(filename, std::ios::out | std::ios::binary);
 
-    
+    if (file.is_open())
+    {
+        player->save(file);
+        file.close();
+    }
+    else
+    {
+        std::cerr << "Unable to open file for writing: " << filename << std::endl;
+    }
+}
+
+void Game::loadGame()
+{
+    std::string filename = "save.dat";
+    std::ifstream file(filename, std::ios::in | std::ios::binary);
+
+    if (file.is_open())
+    {
+        player->load(file);
+        file.close();
+    }
+    else
+    {
+        std::cerr << "Unable to open file for reading: " << filename << std::endl;
+    }
 }
 
 
 /**
- * TODO: Liste chainée par objets
- * TODO: Gérer le try & catch de la map
  * TODO: Si possible save & continue
 */
 int main(int argc, char **argv)

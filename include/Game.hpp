@@ -51,6 +51,10 @@ class Game
         void addEnemy(float x, float y, int width, int height);
         void addEquipement(int typ, SDL_Color couleur);
         void shoot(float angle);
+        
+        void saveGame();
+        void loadGame();
+
 
 };
 

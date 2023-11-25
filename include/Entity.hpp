@@ -38,6 +38,9 @@ class Entity
         void setHeight(int height);       
 
         void setFacing(MovingDirection facing);
+
+        void save(std::ofstream& file);
+        void load(std::ifstream& file);
     private:
         float x;
         float y;

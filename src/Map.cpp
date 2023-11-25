@@ -22,6 +22,9 @@ Map::Map(const char* textFileName, const char* tilemapFileName, SDL_Renderer* re
      * Lit le fichier et store le nombre de lignes et de colonne dans nbLin et nbCol
     */
     readFile(textFileName);
+    
+    
+    
 
     SDL_Surface* optimizedSurface = NULL;
     SDL_Surface* loadedSurface = IMG_Load(tilemapFileName);
@@ -164,6 +167,11 @@ void Map::fileSize(FILE* file)
 	if (current_col > 0) {
         nbLin++;
         max_col = (current_col > max_col) ? current_col : max_col;
+    }
+
+    if (nbLin == 0)
+    {
+        throw std::invalid_argument("Le fichier de la carte est vide");
     }
 
     nbCol = max_col;
