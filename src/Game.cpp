@@ -64,7 +64,7 @@ void Game::init()
     int SDL_EnableKeyRepeat(0);
     
     
-    for (int i = 0; i < 1; i++)//modifier pour eviter les crash 
+    for (int i = 0; i < 3; i++) //modifier pour eviter les crash 
     {
         SDL_Color coult = {i*50,i*75,i*100,i*125};
         addEquipement(i,coult);
@@ -91,14 +91,16 @@ void Game::renderGame()
         {
             map->render(renderer);
             this->player->render(renderer);
+            
             equipements_t* currentEquipement = equipements; 
-            while(currentEquipement != nullptr && currentEquipement->val != nullptr){
+            while(currentEquipement != nullptr){
                 Equipement* equipement = currentEquipement->val;
                 equipement->render(renderer);
                 currentEquipement = currentEquipement->next;
             }
+
             ennemies_t* currentEnemy = enemies;
-            while (currentEnemy != nullptr && currentEnemy->val != nullptr)
+            while (currentEnemy != nullptr)
             {
                 Enemy* ennemi = currentEnemy->val;
                 ennemi->render(renderer);
@@ -106,7 +108,7 @@ void Game::renderGame()
             }
 
             projectiles_t* currentProjectile = projectiles;
-            while (currentProjectile != nullptr && currentProjectile->val != nullptr)
+            while (currentProjectile != nullptr)
             {
                 Projectile* projectile = currentProjectile->val;
                 projectile->render(renderer);
@@ -272,25 +274,20 @@ void Game::update()
 
         case Run:
         {
-            /**
-             * ! A modifier pour que ça fasse des dégâts au joueur
-            */
             ennemies_t* currentEnemy = enemies;
             while (currentEnemy != nullptr && currentEnemy->val != nullptr)
             {
                 Enemy* ennemi = currentEnemy->val;
-                if (ennemi->collision(player) && elapsedTime >= 1.f)
+                if (ennemi->collision(player) && elapsedTime >= .5f)
                 {
                     player->setHP(player->getHP() - 10);
-
-                    // printf("%d", player->getHP());
                     elapsedTime = 0.f;
                 }
+
                 ennemi->behavior(player);
                 ennemi->update(deltaTime);
                 distanceEnemy = ennemi->distance(player);
 
-                ennemi->render(renderer);
                 currentEnemy = currentEnemy->next;
             }
 
@@ -305,7 +302,6 @@ void Game::update()
                 {
                     Projectile* proj = currentProjectile->val;
                     bool projectileRemoved = false;
-                    proj->update(deltaTime);
 
                     if (enemy->collision(proj))
                     {
@@ -329,46 +325,15 @@ void Game::update()
                     currentEnemy = currentEnemy->next;
                 }
                 
-                
             }
-            
 
-            // projectiles_t* currentProjectile = projectiles;
-            // while (currentProjectile != nullptr && currentProjectile->val != nullptr)
-            // {
-            //     Projectile* projectile = currentProjectile->val;
-            //     if (projectile == nullptr)
-            //         break;
-            //     projectile->update(deltaTime);
-            //     bool projectileRemoved = false;
-
-            //     ennemies_t* currentEnemy = enemies;
-            //     while (currentEnemy != nullptr && currentEnemy->val != nullptr)
-            //     {
-            //         Enemy* ennemi = currentEnemy->val;
-            //         if (ennemi->collision(projectile))
-            //         {
-            //             projectileRemoved = true;
-
-            //             enemies = remove(enemies, ennemi);
-            //             projectiles = remove(projectiles, projectile);
-            //             break; 
-            //         }
-            //         else
-            //         {
-            //             currentEnemy = currentEnemy->next;
-            //         }
-            //     }
-
-            //     // Vérifier s'il faut avancer le pointeur des projectiles
-            //     if (!projectileRemoved)
-            //     {
-            //         currentProjectile = currentProjectile->next;
-            //     }
-
-            //     // distanceEnemy = projectile->distance(player);
-            //     projectile->render(renderer);
-            // }
+            projectiles_t* currentProjectile = projectiles;
+            while (currentProjectile != nullptr)
+            {
+                Projectile* projectile = currentProjectile->val;
+                projectile->update(deltaTime);
+                currentProjectile = currentProjectile->next;
+            }
 
             equipements_t* currentstrucEquipement = equipements;
             while(currentstrucEquipement != nullptr){
@@ -432,7 +397,7 @@ void Game::addEnemy(float x, float y, int width, int height)
 void Game::addEquipement(int typ, SDL_Color couleur)
 {
     equipements_t* nouveauEquipement = new equipements_t;
-    nouveauEquipement->val= new Equipement(0,{255,0,0,0});
+    nouveauEquipement->val = new Equipement(typ,{255,0,0,0});
     nouveauEquipement->next = equipements;
     equipements = nouveauEquipement;
 }
@@ -462,7 +427,6 @@ void Game::shoot(float angle)
 /**
  * TODO: Liste chainée par objets
  * TODO: Gérer le try & catch de la map
- * TODO: Vie et affichage de la vie
  * TODO: Si possible save & continue
 */
 int main(int argc, char **argv)

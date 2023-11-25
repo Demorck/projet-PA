@@ -42,9 +42,9 @@ class Game
         Map* map;
         Bar* barHp;
 
-        ennemies_t* enemies;
-        projectiles_t* projectiles;
-        equipements_t* equipements;
+        ennemies_t* enemies = nullptr;
+        projectiles_t* projectiles = nullptr;
+        equipements_t* equipements = nullptr;
 
         State currentState;
 
