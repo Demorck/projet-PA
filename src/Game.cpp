@@ -289,40 +289,81 @@ void Game::update()
                 currentEnemy = currentEnemy->next;
             }
 
-            projectiles_t* currentProjectile = projectiles;
-            while (currentProjectile != nullptr && currentProjectile->val != nullptr)
+            currentEnemy = enemies;
+            while (currentEnemy != nullptr && currentEnemy->val != nullptr)
             {
-                Projectile* projectile = currentProjectile->val;
-                projectile->update(deltaTime);
-                bool projectileRemoved = false;
+                Enemy* enemy = currentEnemy->val;
+                bool ennemyRemove = false;
 
-                ennemies_t* currentEnemy = enemies;
-                while (currentEnemy != nullptr && currentEnemy->val != nullptr)
+                projectiles_t* currentProjectile = projectiles; 
+                while (currentProjectile != nullptr && currentProjectile->val != nullptr)
                 {
-                    Enemy* ennemi = currentEnemy->val;
-                    if (ennemi->collision(projectile))
+                    Projectile* proj = currentProjectile->val;
+                    bool projectileRemoved = false;
+                    proj->update(deltaTime);
+
+                    if (enemy->collision(proj))
                     {
                         projectileRemoved = true;
+                        ennemyRemove = true;
 
-                        enemies = remove(enemies, ennemi);
-                        projectiles = remove(projectiles, projectile);
+                        enemies = remove(enemies, enemy);
+                        projectiles = remove(projectiles, proj);
                         break; 
                     }
-                    else
+
+                    if (!projectileRemoved)
                     {
-                        currentEnemy = currentEnemy->next;
+                        currentProjectile = currentProjectile->next;
                     }
+                    
                 }
 
-                // Vérifiez s'il faut avancer le pointeur des projectiles
-                if (!projectileRemoved)
+                if (!ennemyRemove)
                 {
-                    currentProjectile = currentProjectile->next;
+                    currentEnemy = currentEnemy->next;
                 }
-
-                // distanceEnemy = projectile->distance(player);
-                projectile->render(renderer);
+                
+                
             }
+            
+
+            // projectiles_t* currentProjectile = projectiles;
+            // while (currentProjectile != nullptr && currentProjectile->val != nullptr)
+            // {
+            //     Projectile* projectile = currentProjectile->val;
+            //     if (projectile == nullptr)
+            //         break;
+            //     projectile->update(deltaTime);
+            //     bool projectileRemoved = false;
+
+            //     ennemies_t* currentEnemy = enemies;
+            //     while (currentEnemy != nullptr && currentEnemy->val != nullptr)
+            //     {
+            //         Enemy* ennemi = currentEnemy->val;
+            //         if (ennemi->collision(projectile))
+            //         {
+            //             projectileRemoved = true;
+
+            //             enemies = remove(enemies, ennemi);
+            //             projectiles = remove(projectiles, projectile);
+            //             break; 
+            //         }
+            //         else
+            //         {
+            //             currentEnemy = currentEnemy->next;
+            //         }
+            //     }
+
+            //     // Vérifier s'il faut avancer le pointeur des projectiles
+            //     if (!projectileRemoved)
+            //     {
+            //         currentProjectile = currentProjectile->next;
+            //     }
+
+            //     // distanceEnemy = projectile->distance(player);
+            //     projectile->render(renderer);
+            // }
 
            if(equipement != nullptr && player->collision(equipement))
             {
