@@ -417,7 +417,7 @@ void Game::addEnemy(float x, float y, int width, int height)
 void Game::addEquipement(int typ, SDL_Color couleur)
 {
     equipements_t* nouveauEquipement = new equipements_t;
-    nouveauEquipement->val = new Equipement(typ,{255,0,0,0});
+    nouveauEquipement->val = new Equipement(typ,couleur);
     nouveauEquipement->next = equipements;
     equipements = nouveauEquipement;
 }
