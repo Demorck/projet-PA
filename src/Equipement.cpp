@@ -7,7 +7,6 @@
 
 Equipement::Equipement(int type, SDL_Color couleur)
 {
-    srand(time(NULL));
 
     int minw = 1; 
     int maxw = SCREEN_WIDTH;
@@ -34,7 +33,7 @@ void Equipement::render(SDL_Renderer* renderer)
 {
    
     SDL_Rect rect = {(int)this->cordx, (int)this->cordy, 30, 30};   
-    SDL_SetRenderDrawColor(renderer, 0, 250, 0, 250);
+    SDL_SetRenderDrawColor(renderer, couleur.r, couleur.g, couleur.b, couleur.a);
     SDL_RenderFillRect(renderer, &rect);
     SDL_RenderDrawRect(renderer, &rect);
 }
