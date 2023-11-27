@@ -312,13 +312,13 @@ void Game::update()
             }
 
             currentEnemy = enemies;
-            while (currentEnemy != nullptr && currentEnemy->val != nullptr)
+            while (currentEnemy != nullptr)
             {
                 Enemy* enemy = currentEnemy->val;
                 bool ennemyRemove = false;
 
                 projectiles_t* currentProjectile = projectiles; 
-                while (currentProjectile != nullptr && currentProjectile->val != nullptr)
+                while (currentProjectile != nullptr)
                 {
                     Projectile* proj = currentProjectile->val;
                     bool projectileRemoved = false;
@@ -344,6 +344,10 @@ void Game::update()
                 {
                     currentEnemy = currentEnemy->next;
                 }
+                else
+                {
+                    currentEnemy = enemies;
+                }
                 
             }
 
@@ -357,6 +361,7 @@ void Game::update()
 
             equipements_t* currentstrucEquipement = equipements;
             while(currentstrucEquipement != nullptr){
+                bool equipementRemoved = false;
                 Equipement* currentEquipement = currentstrucEquipement->val;
                 if(player->collision(currentEquipement)){
                     
@@ -369,12 +374,20 @@ void Game::update()
                     if(currentEquipement->getType() == 2){
                         //modif le score
                     }
-                
+
+                    equipementRemoved = true;
                     equipements = remove(equipements, currentEquipement);
                 
                 }
                 
-                currentstrucEquipement = currentstrucEquipement->next;
+                if (!equipementRemoved)
+                {
+                    currentstrucEquipement = currentstrucEquipement->next;
+                }
+                else
+                {
+                    currentstrucEquipement = equipements;
+                }
             }
 
             if(player->collision(barHp))
