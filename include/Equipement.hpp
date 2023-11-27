@@ -10,6 +10,7 @@ class Equipement
         int cordy;
         int typ; //en fonction de la valeur le bonus apporter et différente 
         SDL_Color couleur;
+        int taille;
 
     public:
         Equipement(int typ,SDL_Color couleur);
