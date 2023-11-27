@@ -3,7 +3,8 @@
 #include <Constant.hpp>
 #include <math.h>
 #include <fstream>
-
+#include <random>
+#include <time.h>
 
 Game* game;
 
@@ -363,7 +364,7 @@ void Game::update()
                         player->setSpeed(player->getSpeed() * 2);
                     }
                     if(currentEquipement->getType() == 1){
-                        player->setHP(player->getSpeed() + 5);
+                        player->setHP(player->getHP() + 5);
                     }
                     if(currentEquipement->getType() == 2){
                         //modif le score
@@ -467,6 +468,7 @@ void Game::loadGame()
 */
 int main(int argc, char **argv)
 {
+    srand(time(NULL));
     const std::string& title = "Jeu";
     game = new Game(title);
     game->update();
