@@ -38,6 +38,8 @@ class Game
         
         Player* player;
         
+        int score;
+        Text* scoreRender;
         Menu* mainMenu;
         Map* map;
         Bar* barHp;

@@ -74,6 +74,11 @@ void Game::init()
     }
  
     mainMenu = new Menu(renderer, SCREEN_WIDTH, SCREEN_HEIGHT);
+    this->score = 0;/*initialisation du score et de son affichage*/
+    this->scoreRender = new Text(renderer, SCREEN_WIDTH-(TAILLE_SCORE), SCREEN_HEIGHT-(TAILLE_SCORE),TAILLE_SCORE, TAILLE_SCORE, {255, 255, 255, 255});
+    std::string chaine = std::to_string(this->score);
+    this->scoreRender->setText(chaine);
+ 
 
     try
     {
@@ -106,6 +111,11 @@ void Game::renderGame()
             map->render(renderer);
             this->player->render(renderer);
             
+            this->scoreRender = new Text(renderer, SCREEN_WIDTH-(TAILLE_SCORE), SCREEN_HEIGHT-(TAILLE_SCORE),TAILLE_SCORE, TAILLE_SCORE, {255, 255, 255, 255});
+            std::string chaine = std::to_string(this->score);
+            this->scoreRender->setText(chaine);
+            this->scoreRender->render();
+
             equipements_t* currentEquipement = equipements; 
             while(currentEquipement != nullptr){
                 Equipement* equipement = currentEquipement->val;
@@ -300,6 +310,7 @@ void Game::update()
                 Enemy* ennemi = currentEnemy->val;
                 if (ennemi->collision(player) && elapsedTime >= .5f)
                 {
+                    this->score = this->score -2;
                     player->setHP(player->getHP() - 10);
                     elapsedTime = 0.f;
                 }
@@ -330,6 +341,7 @@ void Game::update()
 
                         enemies = remove(enemies, enemy);
                         projectiles = remove(projectiles, proj);
+                        this->score = this->score + 5;
                         break; 
                     }
 
@@ -372,7 +384,9 @@ void Game::update()
                         player->setHP(player->getHP() + 5);
                     }
                     if(currentEquipement->getType() == 2){
-                        //modif le score
+                        this->score = this->score +10;
+                        int j = this->score;
+                        
                     }
 
                     equipementRemoved = true;
