@@ -37,7 +37,7 @@ class Game
         const std::string& title;
         
         Player* player;
-        //
+        
         int score;
         Text* scoreRender;
         Menu* mainMenu;
