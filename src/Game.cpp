@@ -311,6 +311,7 @@ void Game::update()
                 if (ennemi->collision(player) && elapsedTime >= .5f)
                 {
                     this->score = this->score -2;
+                    //
                     player->setHP(player->getHP() - 10);
                     elapsedTime = 0.f;
                 }
