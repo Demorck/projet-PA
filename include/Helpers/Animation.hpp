@@ -23,7 +23,7 @@ class Animation
         
         int nbFrame;
         float delay;
-        float elapsedTime;
+        float elapsedTime = 0.f;
         SDL_Rect* tabImage; 
         int currentFrame;
         SDL_Texture* spriteSheet;

@@ -20,10 +20,17 @@ Game::Game(const std::string& title)
 
 Game::~Game()
 {
+    printf("Destructeur");
     delete mainMenu;
+    delete player;
+    delete map;
+    delete barHp;
     freeList(enemies);
     freeList(projectiles);
     freeList(equipements);
+
+    SDL_DestroyWindow(window);
+    SDL_DestroyRenderer(renderer);
 }
 
 /**
@@ -145,7 +152,7 @@ void Game::renderGame()
         case GameOver:
         {       
             Text* g = new Text(renderer, 50, 150, 400, 300, {255, 255, 255, 255});
-            g->setText("Game Over sale merde");
+            g->setText("Game Over :((");
             g->render();
             break;
         }
@@ -192,7 +199,7 @@ void Game::handleEvents()
                         player->move(LEFT, false);
                         break;
                     case SDLK_e:
-                        addEquipement(0,{255,0,0,0});
+                        addEquipement(1,{255,0,0,0});
                         break;
                     case SDLK_o:
                         addEnemy(SCREEN_WIDTH / 3 + 200, SCREEN_HEIGHT / 2, 150, 150);
@@ -232,7 +239,7 @@ void Game::handleEvents()
                     }
                     case SDLK_ESCAPE:
                     {
-                        if (currentState == Run or currentState == Settings)
+                        if (currentState == Run or currentState == Settings or currentState == GameOver)
                         {
                             currentState = MainMenu;
                         }
@@ -280,7 +287,7 @@ void Game::handleEvents()
 void Game::update()
 {
     Uint32 currentTime, lastTime = SDL_GetTicks();
-    double deltaTime, elapsedTime;
+    double deltaTime, elapsedTime = 0.f;
     Enemy* closestEnemy;
     float distanceEnemy;
     float minDistance;
@@ -424,6 +431,9 @@ void Game::update()
             break;
         case GameOver:
             break;
+        case Exit:
+            this->isRuning = false;
+            break;
         default:
             break;
         }
@@ -500,7 +510,6 @@ int main(int argc, char **argv)
     const std::string& title = "Jeu";
     game = new Game(title);
     game->update();
-
     delete game;
 
     return 0;

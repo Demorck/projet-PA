@@ -17,6 +17,7 @@ class Entity
         virtual void render(SDL_Renderer* renderer);
         void update(double time);
         bool collision(float x, float y, int width, int height);
+        
         bool collision(Entity* entity);
         bool collision(Projectile* projectile);
         bool collision(Equipement* equipement);

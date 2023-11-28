@@ -13,6 +13,11 @@ Player::Player(int hp, float speed, float x, float y, int width, int height, SDL
     
 }
 
+Player::~Player()
+{
+    
+}
+
 void Player::render(SDL_Renderer* renderer)
 {
     SDL_Rect rect = {(int)this->getX(), (int)this->getY(), this->getWidth(), this->getHeight()};

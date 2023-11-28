@@ -37,7 +37,7 @@ void Menu::update(float deltaTime, State& state)
 
     if (buttons[2]->pressed())
     {
-        exit(0);
+        state = Exit;
     }
 }
 
