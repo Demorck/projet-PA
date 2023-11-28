@@ -467,7 +467,22 @@ void Game::shoot(float angle)
     proj->next = projectiles;
     projectiles = proj;    
 }
+/*
+void Game::saveBestScore()
+{
+    std::string filename = "saveScore.dat";
+    std::ofstream file(filename, std::ios::out | std::ios::binary);
 
+    if (file.is_open())
+    {
+        if (){
+           file.write(reinterpret_cast<const char*>(&score), sizeof(score)); 
+        }
+
+    }else
+    {
+        std::cerr << "Unable to open file for writing: " << filename << std::endl;
+    }*/
 void Game::saveGame()
 {
     std::string filename = "save.dat";
@@ -476,6 +491,8 @@ void Game::saveGame()
     if (file.is_open())
     {
         player->save(file);
+        file.write(reinterpret_cast<const char*>(&score), sizeof(score));
+
         file.close();
     }
     else
@@ -492,6 +509,8 @@ void Game::loadGame()
     if (file.is_open())
     {
         player->load(file);
+        file.read(reinterpret_cast<char*>(&score), sizeof(score));
+
         file.close();
     }
     else
