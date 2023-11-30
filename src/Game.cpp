@@ -154,6 +154,7 @@ void Game::renderGame()
             Text* g = new Text(renderer, 50, 150, 400, 300, {255, 255, 255, 255});
             g->setText("Game Over :((");
             g->render();
+            this->saveBestScore();
             break;
         }
         default:
@@ -213,6 +214,7 @@ void Game::handleEvents()
                     case SDLK_b:
                         loadGame();
                         break;
+                        //
                     case SDLK_p:
                     {
                         if (enemies != nullptr)
@@ -467,22 +469,64 @@ void Game::shoot(float angle)
     proj->next = projectiles;
     projectiles = proj;    
 }
-/*
-void Game::saveBestScore()
-{
-    std::string filename = "saveScore.dat";
-    std::ofstream file(filename, std::ios::out | std::ios::binary);
 
-    if (file.is_open())
-    {
-        if (){
-           file.write(reinterpret_cast<const char*>(&score), sizeof(score)); 
+
+
+void Game::saveBestScore(){
+    std::string filename = "bestScore.dat";
+
+    std::ifstream fichier(filename, std::ios::binary);
+    if (fichier.good()) {
+        
+            int tableauEntiers[4];
+            int nombre;
+            int index = 0;
+            
+            while (fichier >> nombre && index < 4) {
+                
+                tableauEntiers[index++] = nombre;
+            }
+
+            int scoreT = this->score; 
+
+            for(int i = 0; i < index; i++){
+                if(tableauEntiers[i]<scoreT){
+                    tableauEntiers[i] = scoreT;
+                }
+            }
+            fichier.close();
+
+            std::ofstream file(filename);
+
+            if(file.is_open()){
+
+                for (int i = 0; i < index; ++i) {
+                    file << tableauEntiers[i] << " ";
+                }
+                file.close();
+            } else {
+                std::cerr << "Impossible d'ouvrir le fichier pour l'écriture : " << filename << std::endl;
+            }
+    } else {
+        std::ofstream file(filename, std::ios::binary);
+
+        if (file.is_open())
+        {
+        
+            file.write(reinterpret_cast<const char*>(&score), sizeof(score));
+
+            file.close();
         }
+        else {
+            
+            std::cerr << "Unable to open file for writing: " << filename << std::endl;
+    
+            }
+    }
+}
 
-    }else
-    {
-        std::cerr << "Unable to open file for writing: " << filename << std::endl;
-    }*/
+
+
 void Game::saveGame()
 {
     std::string filename = "save.dat";

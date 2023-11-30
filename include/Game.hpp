@@ -56,6 +56,7 @@ class Game
         
         void saveGame();
         void loadGame();
+        void saveBestScore();
 
 
 };
