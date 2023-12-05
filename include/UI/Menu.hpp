@@ -13,7 +13,7 @@ class Menu
         ~Menu();
 
         void update(float deltaTime, State& state);
-        void render();
+        void render(bool canContinue);
         void handleEvents(SDL_Event e);
 
     private:
@@ -37,7 +37,7 @@ class Menu
         SDL_Color textColor;
         SDL_Rect textRect;
 
-        Button* buttons[3];
+        Button* buttons[4];
 };
 
 #endif

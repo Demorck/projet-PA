@@ -34,6 +34,7 @@ class Game
         SDL_Renderer* renderer;
         SDL_Window* window;
         bool isRuning;
+        bool canContinue;
         const std::string& title;
         
         Player* player;
@@ -53,7 +54,9 @@ class Game
         void addEnemy(float x, float y, int width, int height);
         void addEquipement(int typ, SDL_Color couleur);
         void shoot(float angle);
-        
+
+
+        void newGame();
         void saveGame();
         void loadGame();
         void saveBestScore();

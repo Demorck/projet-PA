@@ -27,26 +27,38 @@ void Menu::update(float deltaTime, State& state)
 {
     if (buttons[0]->pressed())
     {
-        state = Run;
+        state = Continue;
     }
 
     if (buttons[1]->pressed())
     {
-        state = Settings;
+        state = NewGame;
     }
 
     if (buttons[2]->pressed())
+    {
+        state = Settings;
+    }
+
+    if (buttons[3]->pressed())
     {
         state = Exit;
     }
 }
 
-void Menu::render()
+void Menu::render(bool canContinue)
 {
     title->render();
-
+    
     for (int i = 0; i < sizeof(buttons) / sizeof(Button*); i++) {
-        buttons[i]->render();
+        if (i == 0 && canContinue)
+        {
+            buttons[i]->render();
+        }
+        if (i != 0)
+        {
+            buttons[i]->render();
+        }
     }
 }
 
@@ -78,8 +90,8 @@ void Menu::loadFont()
 
 void Menu::loadButtons()
 {
-    std::string texts[3] = {"New Game", "Settings", "Exit"};
-    for (int i = 0; i < 3; ++i) {
+    std::string texts[4] = {"Continue", "New Game", "Settings", "Exit"};
+    for (int i = 0; i < sizeof(buttons) / sizeof(Button*); ++i) {
         buttons[i] = new Button(renderer, font, texts[i], 50, 200 + i*50, 300, 40);
     }
 }

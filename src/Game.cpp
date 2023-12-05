@@ -16,11 +16,11 @@ Game::Game(const std::string& title)
     this->init();
     
     currentState = MainMenu;
+    canContinue = true;
 }
 
 Game::~Game()
 {
-    printf("Destructeur");
     delete mainMenu;
     delete player;
     delete map;
@@ -63,8 +63,46 @@ void Game::init()
         exit(1);
     };
 
+    mainMenu = new Menu(renderer, SCREEN_WIDTH, SCREEN_HEIGHT);
     this->player = new Player(100, 160.0f, 50, 50, 64, 64, renderer);
+    loadGame();    
     
+}
+
+void Game::newGame()
+{
+    if (player != nullptr)
+    {
+        delete player;
+        player = nullptr;
+    }
+    if (enemies != nullptr)
+    {
+        freeList(enemies);
+        enemies = nullptr;
+    }
+    if (map != nullptr)
+    {
+        delete map;
+        map = nullptr;
+    }
+    if (barHp != nullptr)
+    {
+        delete barHp;
+        barHp = nullptr;
+    }
+    if (projectiles != nullptr)
+    {
+        freeList(projectiles);
+        projectiles = nullptr;
+    }
+    if (equipements != nullptr)
+    {
+        freeList(equipements);
+        equipements = nullptr;
+    }
+    
+    this->player = new Player(100, 160.0f, 50, 50, 64, 64, renderer);
     for (int i = 0; i < 5; i++)
     {
         addEnemy(SCREEN_WIDTH / 3 + 50 * i, SCREEN_HEIGHT / 2, 30, 30);
@@ -79,13 +117,12 @@ void Game::init()
         SDL_Color coult = {i*50,i*75,i*100,i*125};
         addEquipement(i,coult);
     }
- 
-    mainMenu = new Menu(renderer, SCREEN_WIDTH, SCREEN_HEIGHT);
+
     this->score = 0;/*initialisation du score et de son affichage*/
     this->scoreRender = new Text(renderer, SCREEN_WIDTH-(TAILLE_SCORE), SCREEN_HEIGHT-(TAILLE_SCORE),TAILLE_SCORE, TAILLE_SCORE, {255, 255, 255, 255});
     std::string chaine = std::to_string(this->score);
     this->scoreRender->setText(chaine);
- 
+
 
     try
     {
@@ -96,8 +133,6 @@ void Game::init()
         std::cerr << e.what() << '\n';
         exit(1);
     }
-    
-    
 }
 
 void Game::renderGame()
@@ -108,7 +143,7 @@ void Game::renderGame()
     switch (currentState)
     {
         case MainMenu:
-            mainMenu->render();
+            mainMenu->render(canContinue);
             break;
         case Settings:
             map->render(renderer);
@@ -241,7 +276,7 @@ void Game::handleEvents()
                     }
                     case SDLK_ESCAPE:
                     {
-                        if (currentState == Run or currentState == Settings or currentState == GameOver)
+                        if (currentState == Run or currentState == Settings or currentState == GameOver or currentState == Continue)
                         {
                             currentState = MainMenu;
                         }
@@ -300,7 +335,6 @@ void Game::update()
         deltaTime = (double)(currentTime - lastTime) / 1000.0;
         lastTime = currentTime;        
 
-        this->player->update(deltaTime);
         minDistance = 200000.0f;
 
         elapsedTime += deltaTime;
@@ -310,9 +344,17 @@ void Game::update()
         case MainMenu:
             mainMenu->update(deltaTime, currentState);
             break;
+        
+        case NewGame:
+            currentState = Run;
+            newGame();
+            break;
 
         case Run:
         {
+            
+            this->player->update(deltaTime);
+
             ennemies_t* currentEnemy = enemies;
             while (currentEnemy != nullptr && currentEnemy->val != nullptr)
             {
@@ -424,6 +466,7 @@ void Game::update()
             if (player->getHP() <= 0)
             {
                 currentState = GameOver;
+                canContinue = false;
             }
             
             break;
@@ -436,6 +479,10 @@ void Game::update()
         case Exit:
             this->isRuning = false;
             break;
+        case Continue:
+            newGame();
+            loadGame();
+            currentState = Run;
         default:
             break;
         }
@@ -534,6 +581,7 @@ void Game::saveGame()
 
     if (file.is_open())
     {
+        file.write(reinterpret_cast<const char*>(&canContinue), sizeof(canContinue));
         player->save(file);
         file.write(reinterpret_cast<const char*>(&score), sizeof(score));
 
@@ -552,6 +600,7 @@ void Game::loadGame()
 
     if (file.is_open())
     {
+        file.read(reinterpret_cast<char*>(&canContinue), sizeof(canContinue));
         player->load(file);
         file.read(reinterpret_cast<char*>(&score), sizeof(score));
 
@@ -559,6 +608,7 @@ void Game::loadGame()
     }
     else
     {
+        canContinue = false;
         std::cerr << "Unable to open file for reading: " << filename << std::endl;
     }
 }
