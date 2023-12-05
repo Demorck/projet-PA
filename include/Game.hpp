@@ -42,8 +42,8 @@ class Game
         int score;
         Text* scoreRender;
         Menu* mainMenu;
-        Map* map;
-        Bar* barHp;
+        Map* map = nullptr;
+        Bar* barHp = nullptr;
 
         ennemies_t* enemies = nullptr;
         projectiles_t* projectiles = nullptr;

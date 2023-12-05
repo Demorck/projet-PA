@@ -17,6 +17,10 @@ Menu::Menu(SDL_Renderer* renderer, int width, int height)
 Menu::~Menu()
 {
     SDL_DestroyTexture(titleTexture);
+    for (int i = 0; i < 3; i++)
+    {
+        delete buttons[i];
+    }
 }
 
 /**

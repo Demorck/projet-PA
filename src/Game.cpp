@@ -615,7 +615,14 @@ void Game::loadGame()
 
 
 /**
- * TODO: Si possible save & continue
+ * TODO: Modifier le fichier de sauvegarde quand on meurt
+ * TODO: Caractères non autorisés
+ * TODO: Version jouable
+ * TODO: Fichier texte crash
+ * TODO: Constantes
+ * TODO: Commentaires
+ * TODO: Valgrind
+ * TODO: Class texte
 */
 int main(int argc, char **argv)
 {
