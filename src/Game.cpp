@@ -64,7 +64,8 @@ void Game::init()
     };
 
     mainMenu = new Menu(renderer, SCREEN_WIDTH, SCREEN_HEIGHT);
-    this->player = new Player(100, 160.0f, 50, 50, 64, 64, renderer);
+    /*Initialisation du joueur*/
+    this->player = new Player(HP_PLAYER, SPEED_PLAYER, SCREEN_WIDTH/2, SCREEN_HEIGHT/2, WIDTH_PLAYER, HEIGHT_PLAYER, renderer);
     loadGame();    
     
 }
@@ -101,24 +102,26 @@ void Game::newGame()
         freeList(equipements);
         equipements = nullptr;
     }
-    
-    this->player = new Player(100, 160.0f, 50, 50, 64, 64, renderer);
+    /*Génération d'un joueur quand on lance une game  */
+    this->player = new Player(HP_PLAYER, SPEED_PLAYER, SCREEN_WIDTH/2, SCREEN_HEIGHT/2, WIDTH_PLAYER, HEIGHT_PLAYER, renderer);
     for (int i = 0; i < 5; i++)
     {
         addEnemy(SCREEN_WIDTH / 3 + 50 * i, SCREEN_HEIGHT / 2, 30, 30);
     }
-    this->barHp = new Bar(10, 10, 100, 30, {255, 0, 0, 0});
+    /*Génération de la bar d'hp pour la nouvelle partie*/
+    this->barHp = new Bar(CORD_X_BAR_HP, CORD_Y_BAR_HP, WIDTH_X_BAR_HP, HEIGHT_Y_BAR_HP, COUL_BAR_HP);
 
     int SDL_EnableKeyRepeat(0);
     
     
-    for (int i = 0; i < 3; i++) //modifier pour eviter les crash 
+    for (int i = 0; i < 3; i++) 
     {
         SDL_Color coult = {i*50,i*75,i*100,i*125};
         addEquipement(i,coult);
     }
 
-    this->score = 0;/*initialisation du score et de son affichage*/
+    /*initialisation du score et de son affichage*/
+    this->score = 0;
     this->scoreRender = new Text(renderer, SCREEN_WIDTH-(TAILLE_SCORE), SCREEN_HEIGHT-(TAILLE_SCORE),TAILLE_SCORE, TAILLE_SCORE, {255, 255, 255, 255});
     std::string chaine = std::to_string(this->score);
     this->scoreRender->setText(chaine);
@@ -234,14 +237,14 @@ void Game::handleEvents()
                         player->move(RIGHT, true);
                         player->move(LEFT, false);
                         break;
-                    case SDLK_e:
-                        addEquipement(1,{255,0,0,0});
+                    case SDLK_e:/*commande de debugage pour ajouter des equipement */
+                        addEquipement(1,COUL_PAR_DEF);
                         break;
-                    case SDLK_o:
-                        addEnemy(SCREEN_WIDTH / 3 + 200, SCREEN_HEIGHT / 2, 150, 150);
+                    case SDLK_o:/*commande de debugage pour ajouter des ennemy*/
+                        addEnemy(SCREEN_WIDTH / 3 + 200, SCREEN_HEIGHT / 2, WIDTH_X_ENNEMY, HEIGHT_Y_ENNEMY);
                         break;
-                    case SDLK_h:
-                        player->setHP(player->getHP() + 10);
+                    case SDLK_h:/*commande de debugage pour ajouter de la vie*/
+                        player->setHP(player->getHP() + AJOUT_HP);
                         break;
                     case SDLK_n:
                         saveGame();
@@ -254,7 +257,7 @@ void Game::handleEvents()
                     {
                         if (enemies != nullptr)
                         {
-                            float minDistance = 200000.f;
+                            float minDistance = SCREEN_WIDTH;
                             float currentDis = 0;
                             Enemy* enemyIndex;
                             ennemies_t* currentEnemy = enemies;
@@ -318,7 +321,7 @@ void Game::handleEvents()
 
     }
     
-    // this->player->handleEvents();
+    
 }
 
 void Game::update()
