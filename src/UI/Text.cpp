@@ -50,6 +50,7 @@ Text::Text(SDL_Renderer* renderer, int x, int y, int width, int height, SDL_Colo
 
 Text::~Text()
 {
+    TTF_CloseFont(font);
     SDL_DestroyTexture(textTexture);
 }
 

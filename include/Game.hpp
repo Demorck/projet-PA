@@ -37,11 +37,11 @@ class Game
         bool canContinue;
         const std::string& title;
         
-        Player* player;
+        Player* player = nullptr;
         
         int score;
-        Text* scoreRender;
-        Menu* mainMenu;
+        Text* scoreRender = nullptr;
+        Menu* mainMenu = nullptr;
         Map* map = nullptr;
         Bar* barHp = nullptr;
 

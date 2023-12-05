@@ -21,13 +21,29 @@ Game::Game(const std::string& title)
 
 Game::~Game()
 {
-    delete mainMenu;
-    delete player;
-    delete map;
-    delete barHp;
-    freeList(enemies);
-    freeList(projectiles);
-    freeList(equipements);
+    if (mainMenu != nullptr)
+        delete mainMenu;
+
+    if (player != nullptr) 
+        delete player;
+
+    if (map != nullptr)
+        delete map;
+    
+    if (barHp != nullptr)
+        delete barHp;
+    
+    if (scoreRender != nullptr)
+        delete scoreRender;
+    
+    if (enemies != nullptr)
+        freeList(enemies);
+
+    if (projectiles != nullptr)
+        freeList(projectiles);
+
+    if (equipements != nullptr)
+        freeList(equipements);
 
     SDL_DestroyWindow(window);
     SDL_DestroyRenderer(renderer);
@@ -575,8 +591,6 @@ void Game::saveBestScore(){
     }
 }
 
-
-
 void Game::saveGame()
 {
     std::string filename = "save.dat";
@@ -626,6 +640,7 @@ void Game::loadGame()
  * TODO: Commentaires
  * TODO: Valgrind
  * TODO: Class texte
+ * TODO: Les trucs violets quand on make
 */
 int main(int argc, char **argv)
 {

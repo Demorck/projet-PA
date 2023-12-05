@@ -8,7 +8,7 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}")
 
 # Configuration de la compilation C++
 set(CMAKE_CXX_STANDARD 11)
-set(CMAKE_CXX_FLAGS "-pedantic -O3 -g")
+set(CMAKE_CXX_FLAGS " -O3 -g")
 set(CMAKE_EXE_LINKER_FLAGS)
 
 # Déclaration des fichiers source

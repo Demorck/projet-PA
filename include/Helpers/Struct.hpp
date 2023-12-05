@@ -26,10 +26,12 @@ void freeList(ennemies_t* l)
     if (l != nullptr)
     {
         delete l->val;
-        freeList(l->next);
+        ennemies_t* nextNode = l->next;
         delete l;
+        freeList(nextNode);
     }
 }
+
 
 ennemies_t* remove(ennemies_t* from, Enemy* what)
 {
@@ -69,8 +71,9 @@ void freeList(projectiles_t* l)
     if (l != nullptr)
     {
         delete l->val;
-        freeList(l->next);
+        projectiles_t* nextNode = l->next;
         delete l;
+        freeList(nextNode);
     }
 }
 
@@ -112,8 +115,9 @@ void freeList(equipements_t* l)
     if (l != nullptr)
     {
         delete l->val;
-        freeList(l->next);
+        equipements_t* nextNode = l->next;
         delete l;
+        freeList(nextNode);
     }
 }
 
