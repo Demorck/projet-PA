@@ -1,8 +1,11 @@
 #include <UI/Menu.hpp>
 #include <iostream>
 
-const SDL_Color BACKGROUND_COLOR = { 255, 255, 255, 255 };
-
+/**
+ * @param renderer : Le renderer pour le menu
+ * @param width : La largeur du menu
+ * @param height : La hauteur du menu
+*/
 Menu::Menu(SDL_Renderer* renderer, int width, int height)
     : renderer(renderer), width(width), height(height)
 {
@@ -11,23 +14,25 @@ Menu::Menu(SDL_Renderer* renderer, int width, int height)
     std::string font = "assets/Roboto-Regular.ttf";
     std::string titleText = "Le jeu de dingue";
 
-    title = new Text(renderer, font, titleText, (width + 100) / 3, 30, 60, 20, {255, 255, 255, 255});
+    title = new Text(renderer, font, titleText, width / 2 - 145, 30, 150, 45, {255, 255, 255, 255});
 }
 
+/**
+ * @brief Détruit la texture du titre + chaque bouton
+*/
 Menu::~Menu()
 {
     if(titleTexture != nullptr)
         SDL_DestroyTexture(titleTexture);
         
-    for (int i = 0; i < 3; i++)
+    for (int i = 0; i < NB_BOUTON_MENU - 1; i++)
     {
         delete buttons[i];
     }
 }
 
 /**
- * 
- * ! Penser à modifier exit pour que ce soit smooth
+ * Modifie l'état du  jeu en fonction de quel bouton on clique
 */
 void Menu::update(float deltaTime, State& state)
 {
@@ -43,20 +48,20 @@ void Menu::update(float deltaTime, State& state)
 
     if (buttons[2]->pressed())
     {
-        state = Settings;
-    }
-
-    if (buttons[3]->pressed())
-    {
         state = Exit;
     }
 }
 
+/**
+ * @param canContinue Utilisé si le jeu peut continuer (pour afficher ou non le bouton correspondant)
+ * 
+ * @brief Affiche le titre + les boutons
+*/
 void Menu::render(bool canContinue)
 {
     title->render();
     
-    for (int i = 0; i < sizeof(buttons) / sizeof(Button*); i++) {
+    for (int i = 0; i < NB_BOUTON_MENU; i++) {
         if (i == 0 && canContinue)
         {
             buttons[i]->render();
@@ -68,23 +73,21 @@ void Menu::render(bool canContinue)
     }
 }
 
+/**
+ * @param e l'event en cours
+ * @brief Gère les événements de chaque bouton
+*/
 void Menu::handleEvents(SDL_Event e)
 {
-    for (int i = 0; i < sizeof(buttons) / sizeof(Button*); i++)
+    for (int i = 0; i < NB_BOUTON_MENU; i++)
     {
         buttons[i]->handleEvent(e);
     }
 }
 
-void Menu::clearMenu()
-{
-    for (int i = 0; i < sizeof(buttons) / sizeof(Button*); i++)
-    {
-        delete buttons[i];
-    }
-    SDL_DestroyTexture(titleTexture);
-}
-
+/**
+ * @brief Charge la police pour le menu
+*/
 void Menu::loadFont()
 {
     font = TTF_OpenFont("assets/Roboto-Regular.ttf", 32);
@@ -94,20 +97,13 @@ void Menu::loadFont()
     }
 }
 
+/**
+ * @brief Charge chaque bouton du menu
+*/
 void Menu::loadButtons()
 {
-    std::string texts[4] = {"Continue", "New Game", "Settings", "Exit"};
-    for (int i = 0; i < sizeof(buttons) / sizeof(Button*); ++i) {
+    std::string texts[3] = {"Continue", "New Game", "Exit"};
+    for (int i = 0; i < NB_BOUTON_MENU; ++i) {
         buttons[i] = new Button(renderer, font, texts[i], 50, 200 + i*50, 300, 40);
     }
-}
-
-void Menu::handleMouseClick(int x, int y)
-{
-        
-}
-
-void Menu::handleTextInput(char* text)
-{
-
 }

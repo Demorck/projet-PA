@@ -1,6 +1,18 @@
 #include <UI/Button.hpp>
 #include <iostream>
 
+/**
+ * @param renderer Le renderer pour le bouton
+ * @param font : La police à utiliser
+ * @param text : Le texte à inscrire dans le bouton
+ * @param x : La position du bouton en abscisse
+ * @param y : La position du bouton en ordonnée
+ * @param width : La largeur du bouton
+ * @param height : La hauteur du bouton
+ * @param textColor : La couleur du texte
+ * @param buttonColor : La couleur du bouton
+ * @param buttonHoverColor : La couleur du bouton quand la souris est dessus
+*/
 Button::Button(SDL_Renderer* renderer, TTF_Font* font, const std::string& text, int x, int y, int width, int height, SDL_Color textColor
                 ,SDL_Color buttonColor, SDL_Color buttonHoverColor)
     : renderer(renderer), font(font), text(text), x(x), y(y), width(width), height(height), textColor(textColor), buttonColor(buttonColor), buttonHoverColor(buttonHoverColor)
@@ -28,12 +40,19 @@ Button::Button()
 
 }
 
+/**
+ * @brief Ferme la police et détruit la surface et les texture
+*/
 Button::~Button()
 {
+    // TTF_CloseFont(font);
     SDL_DestroyTexture(textTexture);
     SDL_FreeSurface(surface);
 }
 
+/**
+ * @brief Accorde les états du bouton en fonction de si on clique dessus ou si la souris est dessus.
+*/
 void Button::handleEvent(SDL_Event event)
 {
     if (event.type == SDL_MOUSEBUTTONDOWN) {
@@ -53,6 +72,9 @@ bool Button::isPointInsideRect(int mouseX, int mouseY)
     return (mouseX >= x && mouseX <= x + width && mouseY >= y && mouseY <= y + height);
 }
 
+/**
+ * @brief Rendu du bouton
+*/
 void Button::render()
 {
     SDL_Rect rect = { x, y, width, height };
@@ -65,6 +87,9 @@ void Button::render()
     SDL_RenderFillRect(renderer, &rect);
     SDL_RenderDrawRect(renderer, &rect);
 
+    /**
+     * Centre le texte 
+    */
     SDL_Rect textRect = { x + width / 2, y + height / 2, 0, 0 };
     if (SDL_QueryTexture(textTexture, NULL, NULL, &textRect.w, &textRect.h) != 0) {
         std::cerr << "SDL_QueryTexture Button: " << SDL_GetError() << std::endl;

@@ -3,6 +3,7 @@
 #include <UI/Button.hpp>
 #include <UI/Text.hpp>
 #include <Helpers/Enums.hpp>
+#include <Constant.hpp>
 
 
 class Menu
@@ -17,11 +18,8 @@ class Menu
         void handleEvents(SDL_Event e);
 
     private:
-        void handleMouseClick(int x, int y);
-        void handleTextInput(char* text);
         void loadFont();
         void loadButtons();
-        void clearMenu();
         
         
         SDL_Renderer* renderer;
@@ -37,7 +35,7 @@ class Menu
         SDL_Color textColor;
         SDL_Rect textRect;
 
-        Button* buttons[4];
+        Button* buttons[NB_BOUTON_MENU];
 };
 
 #endif

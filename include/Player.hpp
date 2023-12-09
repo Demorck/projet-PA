@@ -2,7 +2,6 @@
 #define PLAYER_HPP
 #include <Entity.hpp>
 #include <Helpers/Animation.hpp>
-#include <UI/Render.hpp>
 #include <Constant.hpp>
 
 
@@ -14,8 +13,6 @@ class Player : public Entity
         void render(SDL_Renderer* renderer);
         void update(double time);
 
-
-        void handleEvents();
         bool isMoving(MovingDirection move);
         void move(MovingDirection move, bool isMoving);
 

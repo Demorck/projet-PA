@@ -1,6 +1,13 @@
 #include <Player.hpp>
 #include <iostream>
 
+/**
+ * @param hp : Le nombre de point de vie de le joueur
+ * @param speed : La vitesse de le joueur
+ * @param x, y : La position de le joueur
+ * @param width, height : La largeur et hauteur de le joueur
+ * @param renderer : Le renderer pour l'animation
+*/
 Player::Player(int hp, float speed, float x, float y, int width, int height, SDL_Renderer* renderer)
     : Entity(hp, speed, x, y, width, height)
 {
@@ -18,17 +25,25 @@ Player::~Player()
     
 }
 
+/**
+ * @param renderer : Le renderer pour rendre le joueur sur l'écran
+ * 
+ * @brief Affiche le joueur et l'anime.
+*/
 void Player::render(SDL_Renderer* renderer)
 {
     SDL_Rect rect = {(int)this->getX(), (int)this->getY(), this->getWidth(), this->getHeight()};
-    this->animation->animate(renderer, rect);   
-    // SDL_SetRenderDrawColor(renderer, 250, 20, 20, 0);
-    // SDL_RenderFillRect(renderer, &rect);
-    // SDL_RenderDrawRect(renderer, &rect);
+    this->animation->animate(renderer, rect);
 }
 
+/**
+ * @param time : Le temps écoulé
+ * 
+ * @brief Met à jour le joueur et l'animation correspondante
+*/
 void Player::update(double time)
 {
+    /* Permet de mouvoir le joueur ici */
     if (this->moveRight)
         this->setX(this->getX() + this->getSpeed() * time);
 
@@ -40,7 +55,9 @@ void Player::update(double time)
     
     if (this->moveDown)
         this->setY(this->getY() + this->getSpeed() * time);
+    /********************************/
 
+    /* Permet de ne pas faire sortir le joueur en dehors de l'écran */
     if (this->getX() + this->getWidth() > SCREEN_WIDTH)
         this->setX(SCREEN_WIDTH - this->getWidth());
 
@@ -52,11 +69,17 @@ void Player::update(double time)
 
     if (this->getY() < 0)
         this->setY(0);
-    
+    /***************************************************************/
     
     this->animation->update(time);
 }
 
+/**
+ * @param move : Permet de voir de quelle direction on bouge
+ * @param isMoving : Permet de mettre la direction à false ou true
+ * 
+ * @brief Modifie les états des directions où on bouge
+*/
 void Player::move(MovingDirection move, bool isMoving)
 {
     switch (move)
@@ -79,60 +102,11 @@ void Player::move(MovingDirection move, bool isMoving)
 
 }
 
-void Player::handleEvents()
-{
-    SDL_Event event;
-    while(SDL_PollEvent(&event))
-    {
-        switch (event.type)
-        {
-            case SDL_KEYDOWN:
-                switch (event.key.keysym.sym)
-                {
-                    case SDLK_q:
-                        this->moveLeft = true;
-                        this->moveRight = false;
-                        break;
-                    case SDLK_z:
-                        this->moveUp = true;
-                        this->moveDown = false;
-                        break;
-                    case SDLK_d:
-                        this->moveRight = true;
-                        this->moveLeft = false;
-                        break;
-                    case SDLK_s:
-                        this->moveDown = true;
-                        this->moveUp = false;
-                        break;
-                    default:
-                        break;
-                }
-                break;
-            case SDL_KEYUP:
-                switch (event.key.keysym.sym)
-                {
-                    case SDLK_q:
-                        this->moveLeft = false;
-                        break;
-                    case SDLK_z:
-                        this->moveUp = false;
-                        break;
-                    case SDLK_d:
-                        this->moveRight = false;
-                        break;
-                    case SDLK_s:
-                        this->moveDown = false;
-                        break;
-                    default:
-                        break;
-                }
-                break;
-        }
-    }
-    
-}
-
+/**
+ * @param move : Permet de savoir sur quelle direction on bouge
+ * 
+ * @return l'état de la direction 
+*/
 bool Player::isMoving(MovingDirection move)
 {
     switch (move)

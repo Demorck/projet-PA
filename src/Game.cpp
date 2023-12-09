@@ -8,9 +8,13 @@
 
 Game* game;
 
-
+/**
+ * @param title : Le titre de la fenêtre
+ * 
+ * @brief Initialise le jeu et met l'état sur le menu principal. Par défaut, on peut continuer le jeu.
+*/
 Game::Game(const std::string& title)
-    : title(title), enemies(nullptr), projectiles(nullptr)
+    : title(title)
 {
     this->isRuning = true;
     this->init();
@@ -19,6 +23,9 @@ Game::Game(const std::string& title)
     canContinue = true;
 }
 
+/**
+ * @brief Détruit les objets correspondant et vérifie avant qu'on puisse les détruire
+*/
 Game::~Game()
 {
     if (mainMenu != nullptr)
@@ -50,8 +57,7 @@ Game::~Game()
 }
 
 /**
- * * Initialise le jeu avec les différents modules SDL
- * ? Les initialisations des joueurs et des ennemis seront enlevés quand on fera un menu et tout
+ * @brief Initialise SDL, TTF, la fenêtre et le renderer
 */
 void Game::init()
 {
@@ -80,12 +86,16 @@ void Game::init()
     };
 
     mainMenu = new Menu(renderer, SCREEN_WIDTH, SCREEN_HEIGHT);
-    /*Initialisation du joueur*/
+
+    /* Initialisation du joueur */
     this->player = new Player(HP_PLAYER, SPEED_PLAYER, SCREEN_WIDTH/2, SCREEN_HEIGHT/2, WIDTH_PLAYER, HEIGHT_PLAYER, renderer);
     loadGame();    
     
 }
 
+/**
+ * @brief Réinitialise tous les états quand on lance une nouvelle partie.
+*/
 void Game::newGame()
 {
     if (player != nullptr)
@@ -118,27 +128,30 @@ void Game::newGame()
         freeList(equipements);
         equipements = nullptr;
     }
-    /*Génération d'un joueur quand on lance une game  */
+
+    /* Génération d'un joueur quand on lance une partie  */
     this->player = new Player(HP_PLAYER, SPEED_PLAYER, SCREEN_WIDTH/2, SCREEN_HEIGHT/2, WIDTH_PLAYER, HEIGHT_PLAYER, renderer);
+
+    /* Génération des ennemis quand on lance une partie */
     for (int i = 0; i < 5; i++)
     {
         addEnemy(SCREEN_WIDTH / 3 + 50 * i, SCREEN_HEIGHT / 2, 30, 30);
     }
-    /*Génération de la bar d'hp pour la nouvelle partie*/
-    this->barHp = new Bar(CORD_X_BAR_HP, CORD_Y_BAR_HP, WIDTH_X_BAR_HP, HEIGHT_Y_BAR_HP, COUL_BAR_HP);
 
-    int SDL_EnableKeyRepeat(0);
+
+    /* Génération de la bar d'hp pour la nouvelle partie */
+    this->barHp = new Bar(CORD_X_BAR_HP, CORD_Y_BAR_HP, WIDTH_X_BAR_HP, HEIGHT_Y_BAR_HP, COUL_BAR_HP);
     
     
     for (int i = 0; i < 3; i++) 
     {
-        SDL_Color coult = {i*50,i*75,i*100,i*125};
+        SDL_Color coult = {(Uint8)i*50, (Uint8)i*75, (Uint8)i*100, (Uint8)i*125};
         addEquipement(i,coult);
     }
 
     /*initialisation du score et de son affichage*/
     this->score = 0;
-    this->scoreRender = new Text(renderer, SCREEN_WIDTH-(TAILLE_SCORE), SCREEN_HEIGHT-(TAILLE_SCORE),TAILLE_SCORE, TAILLE_SCORE, {255, 255, 255, 255});
+    this->scoreRender = new Text(renderer, SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2,TAILLE_SCORE, TAILLE_SCORE, {255, 255, 255, 255});
     std::string chaine = std::to_string(this->score);
     this->scoreRender->setText(chaine);
 
@@ -150,33 +163,41 @@ void Game::newGame()
     catch(const std::invalid_argument& e)
     {
         std::cerr << e.what() << '\n';
-        exit(1);
+        currentState = Exit;
     }
 }
 
+/**
+ * @brief Affiche le rendu du jeu complet
+*/
 void Game::renderGame()
 {
+    // Réinitialise l'écran
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0);
     SDL_RenderClear(renderer);
 
+    /* En fonction de l'état du jeu, affiche différente chose */
     switch (currentState)
     {
+        /* Affiche le menu */
         case MainMenu:
             mainMenu->render(canContinue);
             break;
-        case Settings:
-            map->render(renderer);
-            break;
+        /* Le jeu quand il est lancé */
         case Run:
         {
+            /* Affiche la carte*/
             map->render(renderer);
+
+            /* Affiche le joueur */
             this->player->render(renderer);
             
-            this->scoreRender = new Text(renderer, SCREEN_WIDTH-(TAILLE_SCORE), SCREEN_HEIGHT-(TAILLE_SCORE),TAILLE_SCORE, TAILLE_SCORE, {255, 255, 255, 255});
+            /* Affiche le score */
             std::string chaine = std::to_string(this->score);
             this->scoreRender->setText(chaine);
             this->scoreRender->render();
 
+            /* Affiche tous les equipements */
             equipements_t* currentEquipement = equipements; 
             while(currentEquipement != nullptr){
                 Equipement* equipement = currentEquipement->val;
@@ -184,6 +205,7 @@ void Game::renderGame()
                 currentEquipement = currentEquipement->next;
             }
 
+            /* Affiche tous les ennemis */
             ennemies_t* currentEnemy = enemies;
             while (currentEnemy != nullptr)
             {
@@ -192,6 +214,7 @@ void Game::renderGame()
                 currentEnemy = currentEnemy->next;
             }
 
+            /* Affiche tous les projectiles */
             projectiles_t* currentProjectile = projectiles;
             while (currentProjectile != nullptr)
             {
@@ -200,11 +223,14 @@ void Game::renderGame()
                 currentProjectile = currentProjectile->next;
             }
 
+            /* Affiche la barre des PV */
             barHp->render(renderer);
             break;
         }
+        /* Cas où le joueur meurt */
         case GameOver:
-        {       
+        {   
+            /* Un nouveau texte pour dire que le joueur est mort, le rend à l'écran et sauvegarde son score */    
             Text* g = new Text(renderer, 50, 150, 400, 300, {255, 255, 255, 255});
             g->setText("Game Over :((");
             g->render();
@@ -215,6 +241,7 @@ void Game::renderGame()
             break;
     }
 
+    // Render tout
     SDL_RenderPresent(renderer);
 }
 
@@ -227,6 +254,7 @@ void Game::handleEvents()
     SDL_Event e;
     while (SDL_PollEvent(&e))
     {
+        // Gère les événements du menu ; i.e les boutons
         mainMenu->handleEvents(e);
         switch (e.type)
         {
@@ -306,29 +334,32 @@ void Game::handleEvents()
                 }
                 break;
             }
+            /**
+             * Permet d'arrêter de bouguer quand on relâche une touche
+            */
             case SDL_KEYUP:
             {
                 switch (e.key.keysym.sym)
                 {
-                case SDLK_z:
-                    if (player->isMoving(UP))
-                        player->move(UP, false);
-                    break;
-                case SDLK_q:
-                    if (player->isMoving(LEFT))
-                        player->move(LEFT, false);
-                    break;
-                case SDLK_s:
-                    if (player->isMoving(DOWN))
-                        player->move(DOWN, false);
-                    break;
-                case SDLK_d:
-                    if (player->isMoving(RIGHT))
-                        player->move(RIGHT, false);
-                    break;
-                
-                default:
-                    break;
+                    case SDLK_z:
+                        if (player->isMoving(UP))
+                            player->move(UP, false);
+                        break;
+                    case SDLK_q:
+                        if (player->isMoving(LEFT))
+                            player->move(LEFT, false);
+                        break;
+                    case SDLK_s:
+                        if (player->isMoving(DOWN))
+                            player->move(DOWN, false);
+                        break;
+                    case SDLK_d:
+                        if (player->isMoving(RIGHT))
+                            player->move(RIGHT, false);
+                        break;
+                    
+                    default:
+                        break;
                 }
             }
             default:
@@ -337,19 +368,24 @@ void Game::handleEvents()
 
     }
     
-    
 }
 
+/**
+ * @brief Met à jour l'état de tout le jeu
+*/
 void Game::update()
 {
+    /* Commence le temps et tout le deltaTime tout ça */
     Uint32 currentTime, lastTime = SDL_GetTicks();
     double deltaTime, elapsedTime = 0.f;
     Enemy* closestEnemy;
     float distanceEnemy;
     float minDistance;
 
+    /* S'active dès que le jeu se lance, se désactive quand on quitte la fenêtre */
     while (this->isRuning)
     {
+        /* deltaTime basique, simple */
         currentTime = SDL_GetTicks();
         deltaTime = (double)(currentTime - lastTime) / 1000.0;
         lastTime = currentTime;        
@@ -360,158 +396,180 @@ void Game::update()
 
         switch (currentState)
         {
-        case MainMenu:
-            mainMenu->update(deltaTime, currentState);
-            break;
-        
-        case NewGame:
-            currentState = Run;
-            newGame();
-            break;
-
-        case Run:
-        {
+            /* Met à jour le menu */
+            case MainMenu:
+                mainMenu->update(deltaTime, currentState);
+                break;
             
-            this->player->update(deltaTime);
+            /* Commence une nouvelle partie */
+            case NewGame:
+                currentState = Run;
+                newGame();
+                break;
 
-            ennemies_t* currentEnemy = enemies;
-            while (currentEnemy != nullptr && currentEnemy->val != nullptr)
+            /* En pleine partie */
+            case Run:
             {
-                Enemy* ennemi = currentEnemy->val;
-                if (ennemi->collision(player) && elapsedTime >= .5f)
+                /* Met à jour le joueur */
+                this->player->update(deltaTime);
+
+                /* Met à jour les ennemis et les potentiels collisions avec le joueur */
+                ennemies_t* currentEnemy = enemies;
+                while (currentEnemy != nullptr && currentEnemy->val != nullptr)
                 {
-                    this->score = this->score -2;
-                    
-                    player->setHP(player->getHP() - 10);
-                    elapsedTime = 0.f;
-                }
-
-                ennemi->behavior(player);
-                ennemi->update(deltaTime);
-                distanceEnemy = ennemi->distance(player);
-
-                currentEnemy = currentEnemy->next;
-            }
-
-            currentEnemy = enemies;
-            while (currentEnemy != nullptr)
-            {
-                Enemy* enemy = currentEnemy->val;
-                bool ennemyRemove = false;
-
-                projectiles_t* currentProjectile = projectiles; 
-                while (currentProjectile != nullptr)
-                {
-                    Projectile* proj = currentProjectile->val;
-                    bool projectileRemoved = false;
-
-                    if (enemy->collision(proj))
+                    Enemy* ennemi = currentEnemy->val;
+                    /* Si y a une collision (avec un délai de 0.5s), on perd de la vie et du score */
+                    if (ennemi->collision(player) && elapsedTime >= .5f)
                     {
-                        projectileRemoved = true;
-                        ennemyRemove = true;
-
-                        enemies = remove(enemies, enemy);
-                        projectiles = remove(projectiles, proj);
-                        this->score = this->score + 5;
-                        break; 
+                        this->score = this->score - 2;
+                        
+                        player->setHP(player->getHP() - 10);
+                        elapsedTime = 0.f;
                     }
 
-                    if (!projectileRemoved)
-                    {
-                        currentProjectile = currentProjectile->next;
-                    }
-                    
-                }
+                    /* Met à jour l'ennemi courant et son comportement et sa distance */
+                    ennemi->behavior(player);
+                    ennemi->update(deltaTime);
+                    distanceEnemy = ennemi->distance(player);
 
-                if (!ennemyRemove)
-                {
                     currentEnemy = currentEnemy->next;
                 }
-                else
+
+                // Réinitialise la boucle d'ennemis
+                currentEnemy = enemies;
+
+                /* Cette boucle met à jour les ennemis s'ils rencontrent un projectile */
+                while (currentEnemy != nullptr)
                 {
-                    currentEnemy = enemies;
-                }
-                
-            }
+                    Enemy* enemy = currentEnemy->val;
+                    bool ennemyRemove = false;
 
-            projectiles_t* currentProjectile = projectiles;
-            while (currentProjectile != nullptr)
-            {
-                Projectile* projectile = currentProjectile->val;
-                projectile->update(deltaTime);
-                currentProjectile = currentProjectile->next;
-            }
+                    projectiles_t* currentProjectile = projectiles; 
+                    while (currentProjectile != nullptr)
+                    {
+                        Projectile* proj = currentProjectile->val;
+                        bool projectileRemoved = false;
 
-            equipements_t* currentstrucEquipement = equipements;
-            while(currentstrucEquipement != nullptr){
-                bool equipementRemoved = false;
-                Equipement* currentEquipement = currentstrucEquipement->val;
-                if(player->collision(currentEquipement)){
-                    
-                    if(currentEquipement->getType() == 0){
-                        player->setSpeed(player->getSpeed() * 2);
-                    }
-                    if(currentEquipement->getType() == 1){
-                        player->setHP(player->getHP() + 5);
-                    }
-                    if(currentEquipement->getType() == 2){
-                        this->score = this->score +10;
-                        int j = this->score;
+                        if (enemy->collision(proj))
+                        {
+                            projectileRemoved = true;
+                            ennemyRemove = true;
+
+                            enemies = remove(enemies, enemy);
+                            projectiles = remove(projectiles, proj);
+                            this->score = this->score + 5;
+                            break; 
+                        }
+
+                        if (!projectileRemoved)
+                        {
+                            currentProjectile = currentProjectile->next;
+                        }
                         
                     }
 
-                    equipementRemoved = true;
-                    equipements = remove(equipements, currentEquipement);
-                
+                    if (!ennemyRemove)
+                    {
+                        currentEnemy = currentEnemy->next;
+                    }
+                    else
+                    {
+                        currentEnemy = enemies;
+                    }
+                    
                 }
-                
-                if (!equipementRemoved)
+                /***************************************************/
+
+                /* Met à jour les projectiles */
+                projectiles_t* currentProjectile = projectiles;
+                while (currentProjectile != nullptr)
                 {
-                    currentstrucEquipement = currentstrucEquipement->next;
+                    Projectile* projectile = currentProjectile->val;
+                    projectile->update(deltaTime);
+                    currentProjectile = currentProjectile->next;
                 }
-                else
+
+                /* Met à jours les équipements et la collision avec le joueur*/
+                equipements_t* currentstrucEquipement = equipements;
+                while(currentstrucEquipement != nullptr){
+                    bool equipementRemoved = false;
+                    Equipement* currentEquipement = currentstrucEquipement->val;
+
+                    /* En fonction du type d'équipement, change le joueur*/
+                    if(player->collision(currentEquipement)){
+                        
+                        if(currentEquipement->getType() == 0){
+                            player->setSpeed(player->getSpeed() + 20);
+                        }
+                        if(currentEquipement->getType() == 1){
+                            player->setHP(player->getHP() + 5);
+                        }
+                        if(currentEquipement->getType() == 2){
+                            this->score = this->score +10;
+                            int j = this->score;
+                            
+                        }
+
+                        equipementRemoved = true;
+                        equipements = remove(equipements, currentEquipement);
+                    
+                    }
+                    
+                    if (!equipementRemoved)
+                    {
+                        currentstrucEquipement = currentstrucEquipement->next;
+                    }
+                    else
+                    {
+                        currentstrucEquipement = equipements;
+                    }
+                }
+
+                /* Bouge la barre des PV si le joueur la touche */
+                if(player->collision(barHp))
                 {
-                    currentstrucEquipement = equipements;
+                    barHp->moveBar();
                 }
-            }
 
-            if(player->collision(barHp))
-            {
-                barHp->moveBar();
-            }
+                barHp->setWidth(player->getHP());
 
-            barHp->setWidth(player->getHP());
-
-            if (player->getHP() <= 0)
-            {
-                currentState = GameOver;
-                canContinue = false;
+                /* Met l'état à GameOver si le joueur n'a plus de PV */
+                if (player->getHP() <= 0)
+                {
+                    currentState = GameOver;
+                    canContinue = false;
+                }
+                
+                break;
             }
-            
-            break;
+            case GameOver:
+                break;
+            case Exit:
+                this->isRuning = false;
+                break;
+
+            /* Si on continue, on lance une nouvelle partie (pour initialiser les variables) et on charge les données dans les variables */
+            case Continue:
+                newGame();
+                loadGame();
+                currentState = Run;
+            default:
+                break;
         }
         
-        case Settings:
-            break;
-        case GameOver:
-            break;
-        case Exit:
-            this->isRuning = false;
-            break;
-        case Continue:
-            newGame();
-            loadGame();
-            currentState = Run;
-        default:
-            break;
-        }
-        
+        // Gère les événements et rend le jeu après tout ça 
         this->handleEvents();
         this->renderGame();                                             
     }    
    
 }
 
+/**
+ * @param x, y : La position initiale de l'ennemi
+ * @param width, height : La largeur et hauteur de l'ennemi
+ * 
+ * @brief Ajoute un ennemi
+*/
 void Game::addEnemy(float x, float y, int width, int height)
 {
     ennemies_t* nouvelEnnemi = new ennemies_t;
@@ -520,6 +578,12 @@ void Game::addEnemy(float x, float y, int width, int height)
     enemies = nouvelEnnemi;
 }
 
+/**
+ * @param typ : Le type de l'équipement (pour la modification du joueur / score)
+ * @param couleur : La couleur de l'équipement
+ * 
+ * @brief Ajoute un équipement
+*/
 void Game::addEquipement(int typ, SDL_Color couleur)
 {
     equipements_t* nouveauEquipement = new equipements_t;
@@ -528,6 +592,11 @@ void Game::addEquipement(int typ, SDL_Color couleur)
     equipements = nouveauEquipement;
 }
 
+/**
+ * @param angle : L'angle de tir
+ * 
+ * @brief TIIIIIIIIIIIIRRE
+*/
 void Game::shoot(float angle)
 {
     projectiles_t* proj = new projectiles_t;
@@ -536,8 +605,9 @@ void Game::shoot(float angle)
     projectiles = proj;    
 }
 
-
-
+/**
+ * @brief Sauvegarde le meilleur score dans bestScore.dat.
+*/
 void Game::saveBestScore(){
     std::string filename = "bestScore.dat";
 
@@ -591,6 +661,9 @@ void Game::saveBestScore(){
     }
 }
 
+/**
+ * @brief Sauvegarde l'état du jeu
+*/
 void Game::saveGame()
 {
     std::string filename = "save.dat";
@@ -610,6 +683,9 @@ void Game::saveGame()
     }
 }
 
+/**
+ * @brief Charge l'état du jeu
+*/
 void Game::loadGame()
 {
     std::string filename = "save.dat";
@@ -633,11 +709,9 @@ void Game::loadGame()
 
 /**
  * TODO: Modifier le fichier de sauvegarde quand on meurt
- * TODO: Caractères non autorisés
  * TODO: Version jouable
  * TODO: Fichier texte crash
  * TODO: Constantes
- * TODO: Commentaires
  * TODO: Valgrind
  * TODO: Class texte
  * TODO: Les trucs violets quand on make

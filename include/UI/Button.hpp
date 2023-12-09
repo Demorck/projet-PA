@@ -13,11 +13,6 @@ public:
     void handleEvent(SDL_Event event);
     void render();
     bool pressed();
-
-    void setTextColor(SDL_Color color);
-    void setButtonColor(SDL_Color color);
-    void setButtonHoverColor(SDL_Color color);
-    
 private:
     bool isPointInsideRect(int x, int y);
 

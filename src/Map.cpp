@@ -191,6 +191,7 @@ void Map::readFile(const char* textFileName)
 
     fileSize(file);
 
+    // Alloue le tableau
     allocate2Dtab();
 
     if (tab == NULL) {
@@ -212,7 +213,15 @@ void Map::readFile(const char* textFileName)
             lig++;
             col = 0;
         } else {
-            tab[lig][col] = (char)c - '0';
+            // Permet d'échapper les caractères non numériques (et se comporte comme un 0 du coup)
+            if (isdigit((char)c))
+            {
+                tab[lig][col] = (char)c - '0';
+            }
+            else
+            {
+                tab[lig][col] = 0;
+            }
             col++;
         }
     }

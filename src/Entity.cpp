@@ -2,10 +2,15 @@
 #include <iostream>
 #include <fstream>
 
+/**
+ * @param hp : Le nombre de point de vie de l'ennemi
+ * @param speed : La vitesse de l'ennemi
+ * @param x, y : La position de l'ennemi
+ * @param width, height : La largeur et hauteur de l'ennemi
+*/
 Entity::Entity(int hp, float speed, float x, float y, int width, int height)
     : hp(hp), speed(speed), x(x), y(y), width(width), height(height)
 {
-    // this->animation = new Animation(x, y, width, height, 1, 1, "assets/sprites/player.png");
 }
 
 Entity::~Entity()
@@ -15,14 +20,18 @@ Entity::~Entity()
 
 void Entity::render(SDL_Renderer* renderer)
 {
-
 }
 
 void Entity::update(double time)
 {
-
 }
 
+/**
+ * @param x, y : la position de l'autre chose à voir si on collisionne avec
+ * @param width, height : Pareil mais pour la hauteur
+ * 
+ * @return true si l'un est dans l'autre ; false sinon
+*/
 bool Entity::collision(float x, float y, int width, int height)
 {
     if (this->x + this->width >= x &&
@@ -35,6 +44,11 @@ bool Entity::collision(float x, float y, int width, int height)
     return false;    
 }
 
+/**
+ * @param entity : Une autre entité 
+ * 
+ * @return true si l'un est dans l'autre ; false sinon
+*/
 bool Entity::collision(Entity* entity)
 {
     if (this->x + this->width >= entity->getX() &&
@@ -47,6 +61,11 @@ bool Entity::collision(Entity* entity)
     return false;
 }
 
+/**
+ * @param equipement : Un equipement
+ * 
+ * @return true si l'un est dans l'autre ; false sinon
+*/
 bool Entity::collision(Equipement* equipement){
     if(this->x + this->width >= equipement->getX() &&
        this->x <= equipement->getX() + 30 &&
@@ -57,6 +76,11 @@ bool Entity::collision(Equipement* equipement){
     return false;
 }
 
+/**
+ * @param projectile : Un projectile
+ * 
+ * @return true si l'un est dans l'autre ; false sinon
+*/
 bool Entity::collision(Projectile* projectile)
 {
     if (this->x + this->width >= projectile->getX() &&
@@ -67,8 +91,14 @@ bool Entity::collision(Projectile* projectile)
             return true;
         }
     return false;
+
 }
 
+/**
+ * @param bar : Une bar (pour la bar d'HP)
+ * 
+ * @return true si l'un est dans l'autre ; false sinon
+*/
 bool Entity::collision(Bar* bar){
     SDL_Rect r = bar->getRect();
     if(this->x + this->width >= r.x &&
@@ -145,12 +175,11 @@ void Entity::setHeight(int height)
     this->height = height;
 }
 
-void Entity::setFacing(MovingDirection facing)
-{
-    this->facing = facing; 
-}
-
-
+/**
+ * @param file : Le fichier à sauvegarder l'état
+ * 
+ * @brief Sauvegarde l'état de l'entité (en particulier, les PV, la vitesse et la position et taille)
+*/
 void Entity::save(std::ofstream& file)
 {
     if (file.is_open())
@@ -168,6 +197,11 @@ void Entity::save(std::ofstream& file)
     }
 }
 
+/**
+ * @param file : Le fichier à charger l'état
+ * 
+ * @brief Charge l'état de l'entité (en particulier, les PV, la vitesse et la position et taille)
+*/
 void Entity::load(std::ifstream& file)
 {
     if (file.is_open())
