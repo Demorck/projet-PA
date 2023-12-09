@@ -25,7 +25,7 @@ Menu::~Menu()
     delete title;
     TTF_CloseFont(font);
         
-    for (int i = 0; i < NB_BOUTON_MENU - 1; i++)
+    for (int i = 0; i < NB_BOUTON_MENU; i++)
     {
         delete buttons[i];
     }

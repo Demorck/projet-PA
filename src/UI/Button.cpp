@@ -45,7 +45,6 @@ Button::Button()
 */
 Button::~Button()
 {
-    TTF_CloseFont(font);
     SDL_DestroyTexture(textTexture);
     SDL_FreeSurface(surface);
 }

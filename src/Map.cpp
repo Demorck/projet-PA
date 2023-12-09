@@ -99,6 +99,7 @@ Map::~Map()
         free(tab[i]);
 
     free(tab);
+    free(tabRect);
     free(rectOnScreen);
     SDL_DestroyTexture(tilemap);
 }

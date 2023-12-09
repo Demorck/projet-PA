@@ -22,7 +22,7 @@ Player::Player(int hp, float speed, float x, float y, int width, int height, SDL
 
 Player::~Player()
 {
-    
+    delete animation;
 }
 
 /**

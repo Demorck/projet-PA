@@ -54,6 +54,8 @@ Game::~Game()
 
     SDL_DestroyWindow(window);
     SDL_DestroyRenderer(renderer);
+    SDL_QuitSubSystem(SDL_INIT_VIDEO);
+    SDL_Quit();
 }
 
 /**
@@ -78,7 +80,7 @@ void Game::init()
         exit(1);
     }
 
-    renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
+    renderer = SDL_CreateRenderer(window, -1, 0);
     if (renderer == nullptr)
     {
         std::cerr << "SDL_CreateRenderer error: " << SDL_GetError() << std::endl;
@@ -118,6 +120,10 @@ void Game::newGame()
         delete barHp;
         barHp = nullptr;
     }
+
+    if (scoreRender != nullptr)
+        delete scoreRender;
+
     if (projectiles != nullptr)
     {
         freeList(projectiles);
@@ -712,7 +718,7 @@ void Game::loadGame()
  * TODO: Version jouable
  * TODO: Fichier texte crash
  * TODO: Constantes
- * TODO: Valgrind
+ * TODO: Valgrind (plus grand chose de leak à part des trucs sdl je crois)
  * TODO: Class texte
  * TODO: Les trucs violets quand on make
 */
