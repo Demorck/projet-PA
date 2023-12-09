@@ -21,7 +21,7 @@ Enemy::Enemy(int hp, float speed, float x, float y, int width, int height, SDL_R
 
 Enemy::~Enemy()
 {
-    
+
 }
 
 /**

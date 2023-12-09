@@ -52,7 +52,7 @@ class Entity
         float speed;
         MovingDirection facing;
 
-        Animation* animation;
+        Animation* animation = nullptr;
 };
 
 #endif

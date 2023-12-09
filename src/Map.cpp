@@ -100,6 +100,7 @@ Map::~Map()
 
     free(tab);
     free(rectOnScreen);
+    SDL_DestroyTexture(tilemap);
 }
 
 void Map::render(SDL_Renderer* renderer)

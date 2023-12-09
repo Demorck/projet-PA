@@ -22,8 +22,8 @@ Menu::Menu(SDL_Renderer* renderer, int width, int height)
 */
 Menu::~Menu()
 {
-    if(titleTexture != nullptr)
-        SDL_DestroyTexture(titleTexture);
+    delete title;
+    TTF_CloseFont(font);
         
     for (int i = 0; i < NB_BOUTON_MENU - 1; i++)
     {

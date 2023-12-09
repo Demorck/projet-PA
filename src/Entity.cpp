@@ -15,6 +15,9 @@ Entity::Entity(int hp, float speed, float x, float y, int width, int height)
 
 Entity::~Entity()
 {
+    if (animation != nullptr)
+        delete animation;
+    
     
 }
 

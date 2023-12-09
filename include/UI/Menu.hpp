@@ -27,7 +27,6 @@ class Menu
         std::string fontPath;
 
         Text* title;
-        SDL_Texture* titleTexture;
 
         int width;
         int height;
