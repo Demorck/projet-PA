@@ -579,7 +579,7 @@ void Game::update()
 void Game::addEnemy(float x, float y, int width, int height)
 {
     ennemies_t* nouvelEnnemi = new ennemies_t;
-    nouvelEnnemi->val = new Enemy(20, 40.0f, x, y, width, height, renderer);
+    nouvelEnnemi->val = new Enemy(HP_ENNEMY, SPEED_ENNEMY, x, y, width, height, renderer);
     nouvelEnnemi->next = enemies;
     enemies = nouvelEnnemi;
 }

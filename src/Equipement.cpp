@@ -4,7 +4,12 @@
 #include <random>
 #include <time.h>
 
-
+/**
+ * @param type : la catégorie de l'équipement 
+ * @param color : La couleur de l'équipement
+ * 
+ * @brief Crée le carré aléatoirement et lui  donne une couleur
+*/
 Equipement::Equipement(int type, SDL_Color couleur)
 {
     this->taille = 30;
@@ -28,7 +33,11 @@ Equipement::~Equipement()
 {
 }
 
-
+/**
+ * @param renderer : Le rendu pour afficher le carré
+ * 
+ * @brief Affiche le carré représentent l'equiment
+*/
 
 void Equipement::render(SDL_Renderer* renderer)
 {

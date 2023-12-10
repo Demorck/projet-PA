@@ -32,6 +32,8 @@
 #define COUL_BAR_HP {255, 0, 0, 0}
 //ajout de hp au debug
 #define AJOUT_HP 10
+//changement de coteer de la bar d'hp
+#define CHGT_COTE 10
 /****************************/
 
 /* Constante du texte de game over */
@@ -46,6 +48,15 @@
 //taille par defaut des ennemy
 #define WIDTH_X_ENNEMY 150
 #define HEIGHT_Y_ENNEMY 150
+//caractéristique de tous les nenemy
+#define HP_ENNEMY 20
+#define SPEED_ENNEMY 40.0f
+//taille pour 'animayion des ennemy
+#define HEIGHT_ANIM_ENNEMY 640
+#define WIDTH_ANIM_ENNEMY 640
 /***************************/
-
+/*Constant du menu */
+//couleur du text dans les menues
+#define COUL_TEXT {255, 255, 255, 255}
+/*************************/
 #endif

@@ -16,7 +16,7 @@ Enemy::Enemy(int hp, float speed, float x, float y, int width, int height, SDL_R
     this->moveLeft = false;
     this->moveRight = false;
     
-    animation = new Animation(x, y, 640, 640, 1, 1.f, "assets/sprites/max.jpg", renderer);
+    animation = new Animation(x, y, WIDTH_ANIM_ENNEMY, HEIGHT_ANIM_ENNEMY, 1, 1.f, "assets/sprites/max.jpg", renderer);
 }
 
 Enemy::~Enemy()

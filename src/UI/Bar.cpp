@@ -59,12 +59,12 @@ void Bar::moveBar()
 {
     if (onLeft)
     {
-        barRect.x = SCREEN_WIDTH - barRect.w - 10;
+        barRect.x = SCREEN_WIDTH - barRect.w - CHGT_COTE;
         onLeft = !onLeft;
     }
     else
     {
-        barRect.x = 10;
+        barRect.x = CHGT_COTE;
         onLeft = !onLeft;
     }
     
