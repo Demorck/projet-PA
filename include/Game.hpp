@@ -49,10 +49,15 @@ class Game
         projectiles_t* projectiles = nullptr;
         equipements_t* equipements = nullptr;
 
+        int waveNumber = 0;
+        double timeSinceLastWave;
+        double timeBetweenWaves = 5.f;
+
         State currentState;
 
         void addEnemy(float x, float y, int width, int height);
         void addEquipement(int typ, SDL_Color couleur);
+        void startNextWave();
         void shoot(float angle);
 
 

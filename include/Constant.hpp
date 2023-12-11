@@ -46,17 +46,20 @@
 
 /* Constante des ennemies */
 //taille par defaut des ennemy
-#define WIDTH_X_ENNEMY 150
-#define HEIGHT_Y_ENNEMY 150
+#define WIDTH_ENNEMY 30
+#define HEIGHT_ENNEMY 30
 //caractéristique de tous les nenemy
 #define HP_ENNEMY 20
 #define SPEED_ENNEMY 40.0f
-//taille pour 'animayion des ennemy
+//taille pour les animations des ennemies (taille de l'image)
 #define HEIGHT_ANIM_ENNEMY 640
 #define WIDTH_ANIM_ENNEMY 640
 /***************************/
-/*Constant du menu */
-//couleur du text dans les menues
-#define COUL_TEXT {255, 255, 255, 255}
+
+/* Constant du menu */
+//Couleur du titre dans le menu
+#define COUL_TEXT {255, 0, 255, 255}
+#define COUL_BOUT_DEFAULT {0, 120, 255, 255}
+
 /*************************/
 #endif

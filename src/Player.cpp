@@ -128,3 +128,13 @@ bool Player::isMoving(MovingDirection move)
             break;
     }
 }
+
+double Player::getShootDelay()
+{
+    return this->shootDelay;
+}
+
+void Player::setShootDelay(double delay)
+{
+    this->shootDelay = delay;
+}

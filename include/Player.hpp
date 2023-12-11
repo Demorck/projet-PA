@@ -16,6 +16,9 @@ class Player : public Entity
         bool isMoving(MovingDirection move);
         void move(MovingDirection move, bool isMoving);
 
+        double getShootDelay();
+        void setShootDelay(double delay);
+
     
     private:
         bool moveLeft;
@@ -24,6 +27,8 @@ class Player : public Entity
         bool moveUp;
 
         Animation* animation; 
+
+        double shootDelay = .5f;
 };
 
 #endif

@@ -14,13 +14,13 @@ Game* game;
  * @brief Initialise le jeu et met l'état sur le menu principal. Par défaut, on peut continuer le jeu.
 */
 Game::Game(const std::string& title)
-    : title(title)
+    : title(title), score(0)
 {
     this->isRuning = true;
+    canContinue = true;
     this->init();
     
     currentState = MainMenu;
-    canContinue = true;
 }
 
 /**
@@ -141,7 +141,7 @@ void Game::newGame()
     /* Génération des ennemis quand on lance une partie */
     for (int i = 0; i < 5; i++)
     {
-        addEnemy(SCREEN_WIDTH / 3 + 50 * i, SCREEN_HEIGHT / 2, 30, 30);
+        addEnemy(SCREEN_WIDTH / 3 + 50 * i, SCREEN_HEIGHT / 2, WIDTH_ENNEMY, HEIGHT_ENNEMY);
     }
 
 
@@ -240,7 +240,6 @@ void Game::renderGame()
             Text* g = new Text(renderer, 50, 150, 400, 300, {255, 255, 255, 255});
             g->setText("Game Over :((");
             g->render();
-            this->saveBestScore();
             break;
         }
         default:
@@ -291,7 +290,7 @@ void Game::handleEvents()
                         addEquipement(1,COUL_PAR_DEF);
                         break;
                     case SDLK_o:/*commande de debugage pour ajouter des ennemy*/
-                        addEnemy(SCREEN_WIDTH / 3 + 200, SCREEN_HEIGHT / 2, WIDTH_X_ENNEMY, HEIGHT_Y_ENNEMY);
+                        addEnemy(SCREEN_WIDTH / 3 + 200, SCREEN_HEIGHT / 2, WIDTH_ENNEMY, HEIGHT_ENNEMY);
                         break;
                     case SDLK_h:/*commande de debugage pour ajouter de la vie*/
                         player->setHP(player->getHP() + AJOUT_HP);
@@ -332,6 +331,7 @@ void Game::handleEvents()
                         if (currentState == Run or currentState == Settings or currentState == GameOver or currentState == Continue)
                         {
                             currentState = MainMenu;
+                            this->saveGame();
                         }
                         break;
                     }
@@ -383,7 +383,7 @@ void Game::update()
 {
     /* Commence le temps et tout le deltaTime tout ça */
     Uint32 currentTime, lastTime = SDL_GetTicks();
-    double deltaTime, elapsedTime = 0.f;
+    double deltaTime = 0.f, elapsedTime = 0.f, elapsedTimeShootDelay = 0.f;
     Enemy* closestEnemy;
     float distanceEnemy;
     float minDistance;
@@ -396,7 +396,7 @@ void Game::update()
         deltaTime = (double)(currentTime - lastTime) / 1000.0;
         lastTime = currentTime;        
 
-        minDistance = 200000.0f;
+        minDistance = SCREEN_WIDTH;
 
         elapsedTime += deltaTime;
 
@@ -416,13 +416,26 @@ void Game::update()
             /* En pleine partie */
             case Run:
             {
+                this->canContinue = true;
+
+                timeSinceLastWave += deltaTime;
+                elapsedTimeShootDelay += deltaTime;
+
+                if (timeSinceLastWave >= timeBetweenWaves) {
+                    startNextWave();
+                    timeSinceLastWave = 0.0;
+                }
+
                 /* Met à jour le joueur */
                 this->player->update(deltaTime);
 
                 /* Met à jour les ennemis et les potentiels collisions avec le joueur */
                 ennemies_t* currentEnemy = enemies;
+                bool isShooting = false;
+                float angle = 0.f;
                 while (currentEnemy != nullptr && currentEnemy->val != nullptr)
                 {
+                    
                     Enemy* ennemi = currentEnemy->val;
                     /* Si y a une collision (avec un délai de 0.5s), on perd de la vie et du score */
                     if (ennemi->collision(player) && elapsedTime >= .5f)
@@ -433,6 +446,18 @@ void Game::update()
                         elapsedTime = 0.f;
                     }
 
+                    /* Si le joueur doit tirer */
+                    if (elapsedTimeShootDelay >= this->player->getShootDelay()) {
+                        float currentDis = 0;
+                        currentDis = ennemi->distance(player);
+                        if (currentDis < minDistance)
+                        {
+                            minDistance = currentDis;
+                            angle = atan2(ennemi->getY() - this->player->getY(), ennemi->getX() - this->player->getX()); 
+                        }
+                        isShooting = true;
+                    }
+
                     /* Met à jour l'ennemi courant et son comportement et sa distance */
                     ennemi->behavior(player);
                     ennemi->update(deltaTime);
@@ -440,6 +465,12 @@ void Game::update()
 
                     currentEnemy = currentEnemy->next;
                 }
+                if (isShooting)
+                {
+                    shoot(angle);
+                    elapsedTimeShootDelay = 0.0;
+                }
+                
 
                 // Réinitialise la boucle d'ennemis
                 currentEnemy = enemies;
@@ -549,6 +580,8 @@ void Game::update()
                 break;
             }
             case GameOver:
+                this->saveGame();
+                this->saveBestScore();
                 break;
             case Exit:
                 this->isRuning = false;
@@ -568,6 +601,26 @@ void Game::update()
         this->renderGame();                                             
     }    
    
+}
+
+/**
+ * @brief Commence la prochaine vague et génère les ennemies
+*/
+void Game::startNextWave()
+{
+    waveNumber++;
+
+    int numberOfEnemies = 3 + waveNumber * 2;
+    
+    std::cout << numberOfEnemies << std::endl;
+
+    for (int i = 0; i < numberOfEnemies; i++)
+    {
+        float x = rand() % SCREEN_WIDTH;
+        float y = rand() % SCREEN_HEIGHT;
+        addEnemy(x, y, WIDTH_ENNEMY, HEIGHT_ENNEMY);
+    }
+    
 }
 
 /**
@@ -714,9 +767,8 @@ void Game::loadGame()
 
 
 /**
- * TODO: Modifier le fichier de sauvegarde quand on meurt
  * TODO: Version jouable
- * TODO: Fichier texte crash
+ * TODO: Fichier texte crash ???
  * TODO: Constantes
  * TODO: Valgrind (plus grand chose de leak à part des trucs sdl je crois)
  * TODO: Class texte
