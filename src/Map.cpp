@@ -26,7 +26,6 @@ Map::Map(const char* textFileName, const char* tilemapFileName, SDL_Renderer* re
     
     
 
-    SDL_Surface* optimizedSurface = NULL;
     SDL_Surface* loadedSurface = IMG_Load(tilemapFileName);
     if( loadedSurface == NULL )
     {

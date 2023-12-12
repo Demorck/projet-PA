@@ -23,13 +23,15 @@
 
 /* Constante de la bar des PV */
 //taille
-#define WIDTH_X_BAR_HP 100
+#define WIDTH_BAR_HP 100
 #define HEIGHT_Y_BAR_HP 30
 //coord
 #define CORD_X_BAR_HP 10
 #define CORD_Y_BAR_HP 10
 //couleur
 #define COUL_BAR_HP {255, 0, 0, 0}
+// Couleur par défaut de la barre
+#define BAR_DEFAULT_COLOR {255, 0, 0, 0}
 //ajout de hp au debug
 #define AJOUT_HP 10
 //changement de coteer de la bar d'hp

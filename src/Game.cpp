@@ -145,7 +145,7 @@ void Game::newGame()
 
 
     /* Génération de la bar d'hp pour la nouvelle partie */
-    this->barHp = new Bar(CORD_X_BAR_HP, CORD_Y_BAR_HP, WIDTH_X_BAR_HP, HEIGHT_Y_BAR_HP, COUL_BAR_HP);
+    this->barHp = new Bar(CORD_X_BAR_HP, CORD_Y_BAR_HP, WIDTH_BAR_HP, HEIGHT_Y_BAR_HP, COUL_BAR_HP);
     
     
     for (int i = 0; i < 3; i++) 
@@ -297,31 +297,6 @@ void Game::handleEvents()
                     case SDLK_b:
                         loadGame();
                         break;
-                        //
-                    case SDLK_p:
-                    {
-                        if (enemies != nullptr)
-                        {
-                            float minDistance = SCREEN_WIDTH;
-                            float currentDis = 0;
-                            Enemy* enemyIndex;
-                            ennemies_t* currentEnemy = enemies;
-                            while (currentEnemy != nullptr && currentEnemy->val != nullptr)
-                            {
-                                Enemy* e = currentEnemy->val;
-                                currentDis = e->distance(player);
-                                if (currentDis < minDistance)
-                                {
-                                    minDistance = currentDis;
-                                    enemyIndex = e;
-                                }
-                                currentEnemy = currentEnemy->next;
-                            }
-                            float angle = atan2(enemyIndex->getY() - this->player->getY(), enemyIndex->getX() - this->player->getX()); 
-                            shoot(angle);
-                        }
-                        break;
-                    }
                     case SDLK_ESCAPE:
                     {
                         if (currentState == Run or currentState == Settings or currentState == GameOver or currentState == Continue)
@@ -380,8 +355,6 @@ void Game::update()
     /* Commence le temps et tout le deltaTime tout ça */
     Uint32 currentTime, lastTime = SDL_GetTicks();
     double deltaTime = 0.f, elapsedTime = 0.f, elapsedTimeShootDelay = 0.f, timeSinceLastWave = 0.f;;
-    Enemy* closestEnemy;
-    float distanceEnemy;
     float minDistance;
 
     /* S'active dès que le jeu se lance, se désactive quand on quitte la fenêtre */
@@ -400,7 +373,7 @@ void Game::update()
         {
             /* Met à jour le menu */
             case MainMenu:
-                mainMenu->update(deltaTime, currentState);
+                mainMenu->update(currentState);
                 break;
             
             /* Commence une nouvelle partie */
@@ -457,7 +430,6 @@ void Game::update()
                     /* Met à jour l'ennemi courant et son comportement et sa distance */
                     ennemi->behavior(player);
                     ennemi->update(deltaTime);
-                    distanceEnemy = ennemi->distance(player);
 
                     currentEnemy = currentEnemy->next;
                 }
@@ -547,9 +519,7 @@ void Game::update()
                             player->setHP(player->getHP() + 5);
                         }
                         if(currentEquipement->getType() == 2){
-                            this->score = this->score +10;
-                            int j = this->score;
-                            
+                            this->score = this->score +10;                            
                         }
 
                         equipementRemoved = true;

@@ -21,13 +21,6 @@ Entity::~Entity()
     
 }
 
-void Entity::render(SDL_Renderer* renderer)
-{
-}
-
-void Entity::update(double time)
-{
-}
 
 /**
  * @param x, y : la position de l'autre chose à voir si on collisionne avec

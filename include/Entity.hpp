@@ -13,9 +13,7 @@ class Entity
     public:
         Entity(int hp, float speed, float x, float y, int width, int height);
         // Entity();
-        ~Entity();
-        virtual void render(SDL_Renderer* renderer);
-        void update(double time);
+        virtual ~Entity();
         bool collision(float x, float y, int width, int height);
         
         bool collision(Entity* entity);
@@ -43,13 +41,14 @@ class Entity
         void save(std::ofstream& file);
         void load(std::ifstream& file);
     private:
+        int hp;
+        float speed;
+        
         float x;
         float y;
         int width;
         int height;
         
-        int hp;
-        float speed;
         MovingDirection facing;
 
         Animation* animation = nullptr;

@@ -13,12 +13,10 @@
 Equipement::Equipement(int type, SDL_Color couleur)
 {
     this->taille = 30;
-    int minw = 1; 
     int maxw = SCREEN_WIDTH - this->taille ;
     this->cordx = rand() % maxw;
 
     
-    int minh = 1; 
     int maxh = SCREEN_HEIGHT - this->taille;
     
     this->cordy = rand() % maxh;

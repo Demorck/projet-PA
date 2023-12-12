@@ -31,7 +31,7 @@ void Projectile::update(float deltaTime)
 */
 void Projectile::render(SDL_Renderer* renderer)
 {
-    SDL_Rect r = {x, y, 5, 5};
+    SDL_Rect r = {(int)x, (int)y, 5, 5};
     SDL_SetRenderDrawColor(renderer, 250, 250, 250, 0);
     SDL_RenderFillRect(renderer, &r);
     SDL_RenderDrawRect(renderer, &r);

@@ -13,7 +13,7 @@ class Menu
         Menu();
         ~Menu();
 
-        void update(float deltaTime, State& state);
+        void update(State& state);
         void render(bool canContinue);
         void handleEvents(SDL_Event e);
 

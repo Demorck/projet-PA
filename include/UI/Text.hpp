@@ -16,18 +16,20 @@ public:
     
 private:
     void loadFont(int height);
+    SDL_Renderer* renderer = nullptr;
+    std::string fontPath;
+    std::string text;
 
     int x;
     int y;
     int width;
     int height;
-
-    TTF_Font* font;
-    std::string fontPath;
-    SDL_Renderer* renderer;
-    std::string text;
-    SDL_Texture* textTexture;
+    
     SDL_Color color;
+
+
+    TTF_Font* font = nullptr;
+    SDL_Texture* textTexture = nullptr;
 };
 
 #endif

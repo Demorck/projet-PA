@@ -22,8 +22,8 @@ class Projectile
     private:
         float x;
         float y;
-        float speed;
         float angle;
+        float speed;
 };
 
 #endif

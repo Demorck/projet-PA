@@ -34,7 +34,7 @@ Menu::~Menu()
 /**
  * Modifie l'état du  jeu en fonction de quel bouton on clique
 */
-void Menu::update(float deltaTime, State& state)
+void Menu::update(State& state)
 {
     if (buttons[0]->pressed())
     {

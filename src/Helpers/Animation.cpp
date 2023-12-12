@@ -69,7 +69,6 @@ void Animation::update(float deltaTime)
 */
 void Animation::createTextureFromSurface(const char* filepath, SDL_Renderer* renderer)
 {
-    SDL_Surface* optimizedSurface = NULL;
     SDL_Surface* loadedSurface = IMG_Load(filepath);
     if( loadedSurface == NULL )
     {

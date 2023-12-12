@@ -6,8 +6,8 @@
 class Bar
 {
     public:
-        Bar(int x, int y, int w, int h, SDL_Color color = {255, 255, 255});
-        Bar(SDL_Rect rect, SDL_Color color = {255, 255, 255});
+        Bar(int x, int y, int w, int h, SDL_Color color = BAR_DEFAULT_COLOR);
+        Bar(SDL_Rect rect, SDL_Color color = BAR_DEFAULT_COLOR);
         ~Bar();
         void render(SDL_Renderer* renderer);
 
