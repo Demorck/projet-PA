@@ -15,8 +15,7 @@ Text::Text(SDL_Renderer* renderer, std::string fontPath, std::string text, int x
     : renderer(renderer), fontPath(fontPath), text(text), x(x), y(y), width(width), height(height), color(color)
 {
 
-    loadFont();
-    TTF_SetFontSize(font, height);
+    loadFont(height);
 
     // Créer la surface
     SDL_Surface* surface = TTF_RenderText_Blended(font, text.c_str(), color);
@@ -51,7 +50,7 @@ Text::Text(SDL_Renderer* renderer, int x, int y, int width, int height, SDL_Colo
     fontPath = "assets/Roboto-Regular.ttf";
     text = "Lorem Ipsum";
 
-    loadFont();
+    loadFont(height);
 
     // Créer la surface
     SDL_Surface* surface = TTF_RenderText_Blended(font, text.c_str(), color);
@@ -130,9 +129,9 @@ std::string Text::getText()
 /**
  * @brief Charge la police.
 */
-void Text::loadFont()
+void Text::loadFont(int height)
 {
-    font = TTF_OpenFont(fontPath.c_str(), 32);
+    font = TTF_OpenFont(fontPath.c_str(), height);
     
     if (font == nullptr) {
         std::cerr << "TTF_OpenFont error in Text.cpp: " << TTF_GetError() << std::endl;

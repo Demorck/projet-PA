@@ -611,8 +611,6 @@ void Game::startNextWave()
     waveNumber++;
 
     int numberOfEnemies = 3 + waveNumber * 2;
-    
-    std::cout << numberOfEnemies << std::endl;
 
     for (int i = 0; i < numberOfEnemies; i++)
     {

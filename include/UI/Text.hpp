@@ -15,7 +15,7 @@ public:
     std::string getText();
     
 private:
-    void loadFont();
+    void loadFont(int height);
 
     int x;
     int y;
