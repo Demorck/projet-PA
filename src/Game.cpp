@@ -5,6 +5,7 @@
 #include <fstream>
 #include <random>
 #include <time.h>
+#include <filesystem>
 
 Game* game;
 
@@ -560,7 +561,11 @@ void Game::update()
             }
             case GameOver:
                 this->saveGame();
-                this->saveBestScore();
+                if (this->savescore == 1){
+                    this->saveBestScor();
+                    this->savescore = 0;
+                }
+                
                 break;
             case Exit:
                 this->isRuning = false;
@@ -644,58 +649,51 @@ void Game::shoot(float angle)
 /**
  * @brief Sauvegarde le meilleur score dans bestScore.dat.
 */
-void Game::saveBestScore(){
+void Game::saveBestScor(){
+    
     std::string filename = "bestScore.dat";
+    int scoreT = this->score; 
+    if (std::filesystem::exists(filename)) {
+        std::ifstream inputFichier(filename);
+        int* tableauEntiers =(int*) malloc(5 * sizeof(int));; // Tableau pour stocker les cinq entiers du fichier
+        int nombre;
+        int index = 0;
 
-    std::ifstream fichier(filename, std::ios::binary);
-    if (fichier.good()) {
-        
-            int tableauEntiers[4];
-            int nombre;
-            int index = 0;
-            
-            while (fichier >> nombre && index < 4) {
-                
-                tableauEntiers[index++] = nombre;
-            }
-
-            int scoreT = this->score; 
-
+        while (inputFichier >> nombre && index < 5) {
+            tableauEntiers[index] = nombre;
+            index++;
+        }
+        inputFichier.close();
             for(int i = 0; i < index; i++){
                 if(tableauEntiers[i]<scoreT){
                     tableauEntiers[i] = scoreT;
+                    break;
                 }
             }
-            fichier.close();
-
-            std::ofstream file(filename);
-
-            if(file.is_open()){
-
-                for (int i = 0; i < index; ++i) {
-                    file << tableauEntiers[i] << " ";
-                }
-                file.close();
-            } else {
-                std::cerr << "Impossible d'ouvrir le fichier pour l'écriture : " << filename << std::endl;
-            }
-    } else {
-        std::ofstream file(filename, std::ios::binary);
-
-        if (file.is_open())
-        {
+        std::filesystem::remove(filename);
         
-            file.write(reinterpret_cast<const char*>(&score), sizeof(score));
-
-            file.close();
+        std::ofstream outputFichier(filename);
+        for (int i = 0; i < 5; ++i) {
+            outputFichier << tableauEntiers[i] << " ";
         }
-        else {
-            
-            std::cerr << "Unable to open file for writing: " << filename << std::endl;
-    
-            }
+
+        outputFichier.close();
+
+    } else {
+        int* tableau = (int*) malloc(5 * sizeof(int));
+        for (int i = 0; i < 5; i++)
+        {
+            tableau[i] = i == 0 ? scoreT : 0;
+        }
+        std::ofstream fichier(filename);
+        fichier << scoreT << " ";
+        for (int i = 0; i < 4; ++i) {
+            fichier << 0 << " ";
+        }
+        fichier.close();
     }
 }
+
 
 /**
  * @brief Sauvegarde l'état du jeu

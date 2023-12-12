@@ -36,6 +36,7 @@ class Game
         bool isRuning;
         bool canContinue;
         const std::string& title;
+        int savescore =1;
         
         Player* player = nullptr;
         
@@ -65,7 +66,7 @@ class Game
         void newGame();
         void saveGame();
         void loadGame();
-        void saveBestScore();
+        void saveBestScor();
 
 
 };
