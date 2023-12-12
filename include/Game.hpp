@@ -41,6 +41,7 @@ class Game
         
         int score;
         Text* scoreRender = nullptr;
+        Text* g = nullptr;
         Menu* mainMenu = nullptr;
         Map* map = nullptr;
         Bar* barHp = nullptr;

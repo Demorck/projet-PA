@@ -52,6 +52,9 @@ Game::~Game()
     if (equipements != nullptr)
         freeList(equipements);
 
+    if (g != nullptr)
+        delete g;
+
     SDL_DestroyWindow(window);
     SDL_DestroyRenderer(renderer);
     SDL_QuitSubSystem(SDL_INIT_VIDEO);
@@ -80,7 +83,7 @@ void Game::init()
         exit(1);
     }
 
-    renderer = SDL_CreateRenderer(window, -1, 0);
+    renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
     if (renderer == nullptr)
     {
         std::cerr << "SDL_CreateRenderer error: " << SDL_GetError() << std::endl;
@@ -88,6 +91,8 @@ void Game::init()
     };
 
     mainMenu = new Menu(renderer, SCREEN_WIDTH, SCREEN_HEIGHT);
+    
+    g = new Text(renderer, 50, 150, 400, 40, {255, 255, 255, 255});
 
     /* Initialisation du joueur */
     this->player = new Player(HP_PLAYER, SPEED_PLAYER, SCREEN_WIDTH/2, SCREEN_HEIGHT/2, WIDTH_PLAYER, HEIGHT_PLAYER, renderer);
@@ -138,12 +143,6 @@ void Game::newGame()
     /* Génération d'un joueur quand on lance une partie  */
     this->player = new Player(HP_PLAYER, SPEED_PLAYER, SCREEN_WIDTH/2, SCREEN_HEIGHT/2, WIDTH_PLAYER, HEIGHT_PLAYER, renderer);
 
-    /* Génération des ennemis quand on lance une partie */
-    for (int i = 0; i < 5; i++)
-    {
-        addEnemy(SCREEN_WIDTH / 3 + 50 * i, SCREEN_HEIGHT / 2, WIDTH_ENNEMY, HEIGHT_ENNEMY);
-    }
-
 
     /* Génération de la bar d'hp pour la nouvelle partie */
     this->barHp = new Bar(CORD_X_BAR_HP, CORD_Y_BAR_HP, WIDTH_X_BAR_HP, HEIGHT_Y_BAR_HP, COUL_BAR_HP);
@@ -151,7 +150,7 @@ void Game::newGame()
     
     for (int i = 0; i < 3; i++) 
     {
-        SDL_Color coult = {(Uint8)i*50, (Uint8)i*75, (Uint8)i*100, (Uint8)i*125};
+        SDL_Color coult = {(Uint8)(i*50), (Uint8)(i*75), (Uint8)(i*100), (Uint8)(i*125)};
         addEquipement(i,coult);
     }
 
@@ -199,8 +198,6 @@ void Game::renderGame()
             this->player->render(renderer);
             
             /* Affiche le score */
-            std::string chaine = std::to_string(this->score);
-            this->scoreRender->setText(chaine);
             this->scoreRender->render();
 
             /* Affiche tous les equipements */
@@ -237,7 +234,6 @@ void Game::renderGame()
         case GameOver:
         {   
             /* Un nouveau texte pour dire que le joueur est mort, le rend à l'écran et sauvegarde son score */    
-            Text* g = new Text(renderer, 50, 150, 400, 300, {255, 255, 255, 255});
             g->setText("Game Over :((");
             g->render();
             break;
@@ -383,7 +379,7 @@ void Game::update()
 {
     /* Commence le temps et tout le deltaTime tout ça */
     Uint32 currentTime, lastTime = SDL_GetTicks();
-    double deltaTime = 0.f, elapsedTime = 0.f, elapsedTimeShootDelay = 0.f;
+    double deltaTime = 0.f, elapsedTime = 0.f, elapsedTimeShootDelay = 0.f, timeSinceLastWave = 0.f;;
     Enemy* closestEnemy;
     float distanceEnemy;
     float minDistance;
@@ -523,7 +519,16 @@ void Game::update()
                 {
                     Projectile* projectile = currentProjectile->val;
                     projectile->update(deltaTime);
-                    currentProjectile = currentProjectile->next;
+                    if (projectile->getX() > SCREEN_WIDTH || projectile->getX() < 0  ||
+                        projectile->getY() > SCREEN_HEIGHT || projectile->getY() < 0)
+                    {
+                        projectiles = remove(projectiles, projectile);
+                        currentProjectile = projectiles;
+                    }
+                    else
+                    {
+                        currentProjectile = currentProjectile->next;
+                    }                   
                 }
 
                 /* Met à jours les équipements et la collision avec le joueur*/
@@ -576,6 +581,10 @@ void Game::update()
                     currentState = GameOver;
                     canContinue = false;
                 }
+
+
+                std::string chaine = std::to_string(this->score);
+                this->scoreRender->setText(chaine);
                 
                 break;
             }

@@ -9,7 +9,7 @@
 #define NB_BOUTON_MENU 3
 
 /*Constante de score*/
-#define TAILLE_SCORE 500
+#define TAILLE_SCORE 20
 
 /* Constante de player */
 //hp
