@@ -514,7 +514,7 @@ void Game::update()
                     if(player->collision(currentEquipement)){
                         
                         if(currentEquipement->getType() == 0){
-                            player->setSpeed(player->getSpeed() + 20);
+                            player->setSpeed(player->getSpeed() + 50);
                         }
                         if(currentEquipement->getType() == 1){
                             player->setHP(player->getHP() + 5);
@@ -603,6 +603,12 @@ void Game::startNextWave()
         addEnemy(x, y, WIDTH_ENNEMY, HEIGHT_ENNEMY);
     }
     
+     
+    for (int i = 0; i < 3; i++) 
+    {
+        SDL_Color coult = {(Uint8)(i*50), (Uint8)(i*75), (Uint8)(i*100), (Uint8)(i*125)};
+        addEquipement(i,coult);
+    }
 }
 
 /**
@@ -749,7 +755,7 @@ void Game::loadGame()
  * TODO: Class texte
  * TODO: Les trucs violets quand on make
 */
-int main(int argc, char **argv)
+int main()
 {
     srand(time(NULL));
     const std::string& title = "Jeu";
