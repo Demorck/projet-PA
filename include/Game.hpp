@@ -58,7 +58,7 @@ class Game
         State currentState;
 
         void addEnemy(float x, float y, int width, int height);
-        void addEquipement(int typ, SDL_Color couleur);
+        void addEquipement(int type, SDL_Color couleur);
         void startNextWave();
         void shoot(float angle);
 
@@ -66,7 +66,7 @@ class Game
         void newGame();
         void saveGame();
         void loadGame();
-        void saveBestScor();
+        void saveBestScore();
 
 
 };

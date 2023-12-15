@@ -5,7 +5,7 @@
 #include <fstream>
 #include <random>
 #include <time.h>
-#include <filesystem>
+#include <iostream>
 
 Game* game;
 
@@ -562,7 +562,7 @@ void Game::update()
             case GameOver:
                 this->saveGame();
                 if (this->savescore == 1){
-                    this->saveBestScor();
+                    this->saveBestScore();
                     this->savescore = 0;
                 }
                 
@@ -626,15 +626,15 @@ void Game::addEnemy(float x, float y, int width, int height)
 }
 
 /**
- * @param typ : Le type de l'équipement (pour la modification du joueur / score)
+ * @param type : Le type de l'équipement (pour la modification du joueur / score)
  * @param couleur : La couleur de l'équipement
  * 
  * @brief Ajoute un équipement
 */
-void Game::addEquipement(int typ, SDL_Color couleur)
+void Game::addEquipement(int type, SDL_Color couleur)
 {
     equipements_t* nouveauEquipement = new equipements_t;
-    nouveauEquipement->val = new Equipement(typ,couleur);
+    nouveauEquipement->val = new Equipement(type,couleur);
     nouveauEquipement->next = equipements;
     equipements = nouveauEquipement;
 }
@@ -655,11 +655,14 @@ void Game::shoot(float angle)
 /**
  * @brief Sauvegarde le meilleur score dans bestScore.dat.
 */
-void Game::saveBestScor(){
+void Game::saveBestScore(){
     
     std::string filename = "bestScore.dat";
+    std::ifstream file;
+    file.open(filename);
     int scoreT = this->score; 
-    if (std::filesystem::exists(filename)) {
+    if (file) {
+        file.close();
         std::ifstream inputFichier(filename);
         int* tableauEntiers =(int*) malloc(5 * sizeof(int));; // Tableau pour stocker les cinq entiers du fichier
         int nombre;
@@ -676,7 +679,6 @@ void Game::saveBestScor(){
                     break;
                 }
             }
-        std::filesystem::remove(filename);
         
         std::ofstream outputFichier(filename);
         for (int i = 0; i < 5; ++i) {
@@ -684,8 +686,10 @@ void Game::saveBestScor(){
         }
 
         outputFichier.close();
+        free(tableauEntiers);
 
     } else {
+        file.close();
         int* tableau = (int*) malloc(5 * sizeof(int));
         for (int i = 0; i < 5; i++)
         {
@@ -697,6 +701,7 @@ void Game::saveBestScor(){
             fichier << 0 << " ";
         }
         fichier.close();
+        free(tableau);
     }
 }
 
@@ -748,12 +753,8 @@ void Game::loadGame()
 
 
 /**
- * TODO: Version jouable
- * TODO: Fichier texte crash ???
  * TODO: Constantes
  * TODO: Valgrind (plus grand chose de leak à part des trucs sdl je crois)
- * TODO: Class texte
- * TODO: Les trucs violets quand on make
 */
 int main()
 {
