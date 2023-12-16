@@ -1,6 +1,8 @@
 # projet-PA
 Projet pour la programmation avancée (PA/64) à la FST Nancy.
 
+Le binôme est le groupe numéro 6 avec Rafael Buard et Maximilien ANTOINE. Le lien git est: https://github.com/Demorck/projet-PA
+
 
 Pour jouer, compiler : il y a un Makefile ou un cmake.
 
